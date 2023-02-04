@@ -6,10 +6,31 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.IOConstants;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class RobotContainer {
+  // The robot's subsystems
+  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+
+  // The driver's controller
+  CommandXboxController m_driverController =
+      new CommandXboxController(IOConstants.kDriverControllerPort);
+
   public RobotContainer() {
     configureBindings();
+
+    // Configure default commands
+    // Set the default drive command to split-stick arcade drive
+    m_robotDrive.setDefaultCommand(
+        // A split-stick arcade command, with forward/backward controlled by the left
+        // hand, and turning controlled by the right.
+        Commands.run(
+            () ->
+                m_robotDrive.arcadeDrive(
+                    -m_driverController.getLeftY(), -m_driverController.getRightX()),
+            m_robotDrive));
   }
 
   private void configureBindings() {}
