@@ -9,14 +9,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IOConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LightingSubsystem;
 
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final LightingSubsystem m_robotLighting = new LightingSubsystem();
 
   // The driver's controller
-  CommandXboxController m_driverController =
-      new CommandXboxController(IOConstants.kDriverControllerPort);
+  CommandXboxController m_driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
 
   public RobotContainer() {
     configureBindings();
@@ -27,9 +28,8 @@ public class RobotContainer {
         // A split-stick arcade command, with forward/backward controlled by the left
         // hand, and turning controlled by the right.
         Commands.run(
-            () ->
-                m_robotDrive.arcadeDrive(
-                    m_driverController.getLeftY(), -m_driverController.getLeftX()),
+            () -> m_robotDrive.arcadeDrive(
+                m_driverController.getLeftY(), -m_driverController.getLeftX()),
             m_robotDrive));
   }
 
@@ -42,6 +42,17 @@ public class RobotContainer {
         .rightBumper()
         .onTrue(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.5)))
         .onFalse(Commands.runOnce(() -> m_robotDrive.setMaxOutput(1)));
+
+    m_driverController
+        .b()
+        .onTrue(Commands.runOnce(() -> m_robotLighting.setRed()));
+    m_driverController
+        .a()
+        .onTrue(Commands.runOnce(() -> m_robotLighting.setGreen()));
+    m_driverController
+        .x()
+        .onTrue(Commands.runOnce(() -> m_robotLighting.setBlue()));
+
   }
 
   public Command getAutonomousCommand() {
