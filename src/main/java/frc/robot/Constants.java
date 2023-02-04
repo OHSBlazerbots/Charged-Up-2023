@@ -26,7 +26,10 @@ public final class Constants {
 
   public static final class ClawConstants {  }
 
-  public static final class LightingConstants {  }
+  public static final class LightingConstants { 
+    public static final int kLedStrip1Port = 0;
+    public static final int kLedStrip1Length = 60;
+   }
 
   public static final class AutoConstants {  }
 
