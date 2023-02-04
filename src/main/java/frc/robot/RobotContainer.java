@@ -33,7 +33,16 @@ public class RobotContainer {
             m_robotDrive));
   }
 
-  private void configureBindings() {}
+  /**
+   * Use this method to define your button->command mappings
+   */
+  private void configureBindings() {
+    // While holding the shoulder button, drive at half speed
+    m_driverController
+        .rightBumper()
+        .onTrue(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.5)))
+        .onFalse(Commands.runOnce(() -> m_robotDrive.setMaxOutput(1)));
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
