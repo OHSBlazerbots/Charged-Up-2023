@@ -13,7 +13,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-
+  private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
   // The driver's controller
   CommandXboxController m_driverController =
       new CommandXboxController(IOConstants.kDriverControllerPort);
@@ -42,6 +42,16 @@ public class RobotContainer {
         .rightBumper()
         .onTrue(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.5)))
         .onFalse(Commands.runOnce(() -> m_robotDrive.setMaxOutput(1)));
+
+    m_driverController
+        .y()
+        .onTrue(Commands.runOnce(() -> m_robotElevator.setMaxOutput(0.5)))
+        .onFalse(Commands.runOnce(() -> m_robotElevator.setMaxOutput(0.1)));
+    
+    m_driverController
+        .a()
+        .onTrue(Commands.runOnce(() -> m_robotElevator.setMaxOutput(-0.5)))
+        .onFalse(Commands.runOnce(() -> m_robotElevator.setMaxOutput(0.1)));
   }
 
   public Command getAutonomousCommand() {
