@@ -46,13 +46,13 @@ public class RobotContainer {
 
     m_driverController
         .y()
-        .onTrue(Commands.runOnce(() -> m_robotElevator.setMaxOutput(0.5)))
-        .onFalse(Commands.runOnce(() -> m_robotElevator.setMaxOutput(0.1)));
+        .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.5)))
+        .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.1)));
     
     m_driverController
         .a()
-        .onTrue(Commands.runOnce(() -> m_robotElevator.setMaxOutput(-0.5)))
-        .onFalse(Commands.runOnce(() -> m_robotElevator.setMaxOutput(0.1)));
+        .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-0.5)))
+        .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.1)));
   }
 
   public Command getAutonomousCommand() {
