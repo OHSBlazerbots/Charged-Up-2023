@@ -21,10 +21,12 @@ public final class Constants {
   }
 
   public static final class ElevatorConstants { 
-    public static final int kElevMotorPort = 25;
+    public static final int kElevMotorPort = 25; // 25 is a placeholder
   }
 
-  public static final class ArmConstants {  }
+  public static final class ArmConstants {
+    public static final int kArmMotorPort = 5; // 5 is a placeholder
+  }
 
   public static final class ClawConstants {  }
 

@@ -10,11 +10,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IOConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
 
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
+  private final ArmSubsystem m_robotArm = new ArmSubsystem();
   // The driver's controller
   CommandXboxController m_driverController =
       new CommandXboxController(IOConstants.kDriverControllerPort);
@@ -43,16 +45,28 @@ public class RobotContainer {
         .rightBumper()
         .onTrue(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.5)))
         .onFalse(Commands.runOnce(() -> m_robotDrive.setMaxOutput(1)));
-
-    m_driverController
+    // This is for elevator up and down movement.
+    m_driverController // This moves elevator up
         .y()
         .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.5)))
         .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.1)));
     
-    m_driverController
+    m_driverController // This moves elevator down
         .a()
         .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-0.5)))
         .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.1)));
+
+    // This is for arm movement forward and backward.
+    m_driverController // This moves arm backwards
+        .x()
+        .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(-0.5)))
+        .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
+
+    m_driverController // This moves arm forwards
+        .b()
+        .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(0.5)))
+        .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
+
   }
 
   public Command getAutonomousCommand() {
