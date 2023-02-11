@@ -77,3 +77,7 @@ TODO
 * [The Git Book](https://git-scm.com/book/en/v2)
 * [GitHub Git Guides](https://github.com/git-guides/)
 * [Introduction to GitHub](https://github.com/skills/introduction-to-github)
+
+## Confirmations
+
+* This is my confirmation that I have read and understand the contributions. - Yathaarth
