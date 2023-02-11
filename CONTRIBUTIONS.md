@@ -54,7 +54,7 @@ Press the `+` button for each file you would like to commit. Tip: you can (and s
 
 ## 6. Git sync
 
-Once you've make the commit, you should sync it to GitHub. In the source control panel click 'Publish Branch' (if this is a new branch) or 'Sync Changes' (if you've already published the branch). You should do this frequently (ideally after every commit, even if you're not ready) so that others can view your changes and to back up your changes in case something happens to your copy of the repository.
+Once you've made the commit, you should sync it to GitHub. In the source control panel click 'Publish Branch' (if this is a new branch) or 'Sync Changes' (if you've already published the branch). You should do this frequently (ideally after every commit, even if you're not ready) so that others can view your changes and to back up your changes in case something happens to your copy of the repository.
 
 ## 7. Make pull requests
 
