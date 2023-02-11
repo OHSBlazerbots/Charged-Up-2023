@@ -20,7 +20,9 @@ public final class Constants {
     public static final int kRightMotor2Port = 18;
   }
 
-  public static final class ElevatorConstants {  }
+  public static final class ElevatorConstants { 
+    public static final int kElevMotorPort = 25;
+   }
 
   public static final class ArmConstants {  }
 
