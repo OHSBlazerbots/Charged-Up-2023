@@ -78,10 +78,11 @@ public class RobotContainer {
         .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0.5)))
         .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
     //This is for claw movement to close.
+    m_CoDriverController    
         .button(2)
         .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(-0.5)))
         .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));    
-    
+        
   }
 
   public Command getAutonomousCommand() {
