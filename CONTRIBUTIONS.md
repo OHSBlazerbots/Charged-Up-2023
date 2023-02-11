@@ -81,3 +81,4 @@ TODO
 ## Confirmations
 
 * This is my confirmation that I have read and understand the contributions. - Yathaarth
+* I've read & understand this document, thank you! - Younes
