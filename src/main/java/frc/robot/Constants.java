@@ -28,7 +28,9 @@ public final class Constants {
     public static final int kArmMotorPort = 5; // 5 is a placeholder
   }
 
-  public static final class ClawConstants {  }
+  public static final class ClawConstants {
+    public static final int kClawMotorPort = 19; // 19 is a placeholder
+  }
 
   public static final class LightingConstants {  }
 
@@ -36,5 +38,6 @@ public final class Constants {
 
   public static final class IOConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kCoDriverControllerPort = 1;
   }
 }
