@@ -38,6 +38,6 @@ public final class Constants {
 
   public static final class IOConstants {
     public static final int kDriverControllerPort = 0;
-    public static final int kCoDriverControllerPort = 0;
+    public static final int kCoDriverControllerPort = 1;
   }
 }
