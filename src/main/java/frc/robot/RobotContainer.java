@@ -87,6 +87,10 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    //Drives forward at half-speed for half a second.
+    return Commands.runOnce(() -> m_robotDrive.arcadeDrive(0.5,0.0))
+                    .waitSeconds(0.5)
+                    //Stops.
+                    .runOnce(() -> m_robotDrive.arcadeDrive(0.0,0.0));
   }
 }
