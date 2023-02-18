@@ -88,9 +88,17 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     //Drives forward at half-speed for half a second.
-    return Commands.runOnce(() -> m_robotDrive.arcadeDrive(0.5,0.0))
-                    .waitSeconds(0.5)
+    return Commands.sequence(
+        () -> m_robotDrive.arcadeDrive(0.5,0.0), 
+
+        //Waits half of a second.
+        CommandBase.waitSeconds(0.5),
+
+        //Stops.
+        () -> m_robotDrive.arcadeDrive(0.0,0.0)
+        )
+                    //.waitSeconds(0.5)
                     //Stops.
-                    .runOnce(() -> m_robotDrive.arcadeDrive(0.0,0.0));
+                    //.runOnce(() -> m_robotDrive.arcadeDrive(0.0,0.0));
   }
 }
