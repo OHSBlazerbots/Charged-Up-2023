@@ -96,7 +96,7 @@ public class RobotContainer {
 
         //Stops.
         () -> m_robotDrive.arcadeDrive(0.0,0.0)
-        )
+        );
                     //.waitSeconds(0.5)
                     //Stops.
                     //.runOnce(() -> m_robotDrive.arcadeDrive(0.0,0.0));
