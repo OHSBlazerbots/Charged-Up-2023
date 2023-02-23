@@ -13,6 +13,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.commands.MoveElevatorCommand;
 
 public class RobotContainer {
   // The robot's subsystems
@@ -82,9 +83,13 @@ public class RobotContainer {
     m_CoDriverController    
         .button(2)
         .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(-0.5)))
-        .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));    
+        .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));  
+    m_CoDriverController 
+        .button(3)
+        .onTrue(new MoveElevatorCommand(m_robotElevator));   
         
   }
+  
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
