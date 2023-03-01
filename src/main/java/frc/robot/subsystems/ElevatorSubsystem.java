@@ -26,4 +26,8 @@ public class ElevatorSubsystem extends SubsystemBase {
       // need to finish implementation, hook up hall effect sensors
    }
 
+   public double getPosition() {
+      return 0.0; // use encoder to get actual value
+   }
+
 }
