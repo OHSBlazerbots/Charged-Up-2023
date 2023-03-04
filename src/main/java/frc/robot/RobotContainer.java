@@ -49,13 +49,13 @@ public class RobotContainer {
                 m_driverController
                                 .rightBumper()
                                 .onTrue(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotDrive.setMaxOutput(1)));
+                                .onFalse(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.8)));
 
                 // This is for elevator up and down movement.
                 m_driverController // This moves elevator up
                                 .y()
                                 .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.2)));
+                                .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-0.1)));
 
                 m_driverController // This moves elevator down
                                 .a()
