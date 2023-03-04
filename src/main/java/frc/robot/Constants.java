@@ -18,10 +18,14 @@ package frc.robot;
  */
 public final class Constants {
   public static final class DriveConstants {
-    public static final int kLeftMotor1Port = 7;
-    public static final int kLeftMotor2Port = 17;
-    public static final int kRightMotor1Port = 8;
-    public static final int kRightMotor2Port = 18;
+    public static final int kLeftMotorPrimaryPort = 7;
+    public static final int kLeftMotorSecondaryPort = 17;
+    public static final int kRightMotorPrimaryPort = 8;
+    public static final int kRightMotorSecondaryPort = 18;
+    public final static int kTimeoutMs = 30;
+    public final static int PID_PRIMARY = 0;
+    public final static int REMOTE_0 = 0;
+    public final static int REMOTE_1 = 1;
   }
 
   public static final class ElevatorConstants {
