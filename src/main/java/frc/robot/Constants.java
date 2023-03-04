@@ -33,7 +33,7 @@ public final class Constants {
   }
 
   public static final class ClawConstants {
-    public static final int kClawMotorPort = 8; // 19 is a placeholder
+    public static final int kClawMotorPort = 3; // 19 is a placeholder
   }
 
   public static final class LightingConstants {
