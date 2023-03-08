@@ -8,17 +8,21 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import com.ctre.phoenix.motorcontrol.DemandType;
 //import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import frc.robot.Constants.DriveConstants;
+import com.ctre.phoenix.motorcontrol.SensorTerm;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 //import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -62,16 +66,20 @@ public class DriveSubsystem extends SubsystemBase {
         // We need to invert one side of the drivetrain so that positive voltages
         // result in both sides moving forward. Depending on how your robot's
         // gearbox is constructed, you might have to invert the left side instead.
-        m_rightMotors.setInverted(true);
+        // m_rightMotors.setInverted(true);
+
         // Set the distance per pulse for the drive encoders. We can simply use the
         // distance traveled for one rotation of the wheel divided by the encoder
         // resolution.
-        m_leftEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
-        m_rightEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
-
-        m_leftEncoder.reset();
-        m_rightEncoder.reset();
-
+        /**
+         * m_leftEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius /
+         * kEncoderResolution);
+         * m_rightEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius /
+         * kEncoderResolution);
+         * 
+         * m_leftEncoder.reset();
+         * m_rightEncoder.reset();
+         **/
         // Reset each talon to factory default
         // If we have to swap talons, we want to make sure
         // the new talon is configured properly
@@ -82,6 +90,9 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_rightMotorPrimary.set(ControlMode.PercentOutput, 0);
         m_leftMotorPrimary.set(ControlMode.PercentOutput, 0);
+
+        m_rightMotorSecondary.follow(m_rightMotorPrimary);
+        m_leftMotorSecondary.follow(m_leftMotorPrimary);
 
         // Set all motors to brake mode to prevent coasting
         m_leftMotorPrimary.setNeutralMode(NeutralMode.Brake);
@@ -105,6 +116,107 @@ public class DriveSubsystem extends SubsystemBase {
         // m_odometry = new DifferentialDriveOdometry(
         // m_gyro.getRotation2d(), m_leftEncoder.getDistance(),
         // m_rightEncoder.getDistance());
+        /*
+         * Setup difference signal to be used for turn when performing Drive Straight
+         * with encoders
+         */
+        m_rightMotorPrimary.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.RemoteSensor0, DriveConstants.kTimeoutMs); // Feedback
+                                                                                                                         // Device
+                                                                                                                         // of
+                                                                                                                         // Remote
+                                                                                                                         // Talon
+        m_rightMotorPrimary.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.QuadEncoder, DriveConstants.kTimeoutMs); // Quadrature
+                                                                                                                       // Encoder
+                                                                                                                       // of
+                                                                                                                       // current
+                                                                                                                       // Talon
+        /*
+         * Difference term calculated by right Talon configured to be selected sensor of
+         * turn PID
+         */
+        m_rightMotorPrimary.configSelectedFeedbackSensor(FeedbackDevice.SensorDifference,
+                DriveConstants.PID_TURN,
+                DriveConstants.kTimeoutMs);
+
+        /* Scale the Feedback Sensor using a coefficient */
+        /**
+         * Heading units should be scaled to ~4000 per 360 deg, due to the following
+         * limitations...
+         * - Target param for aux PID1 is 18bits with a range of [-131072,+131072]
+         * units.
+         * - Target for aux PID1 in motion profile is 14bits with a range of
+         * [-8192,+8192] units.
+         * ... so at 3600 units per 360', that ensures 0.1 degree precision in firmware
+         * closed-loop
+         * and motion profile trajectory points can range +-2 rotations.
+         */
+        m_rightMotorPrimary.configSelectedFeedbackCoefficient(
+                DriveConstants.kTurnTravelUnitsPerRotation / DriveConstants.kEncoderUnitsPerRotation, // Coefficient
+                DriveConstants.PID_TURN, // PID Slot of Source
+                DriveConstants.kTimeoutMs);
+        m_rightMotorPrimary.setInverted(true);
+        m_leftMotorPrimary.setInverted(false);
+        m_leftMotorSecondary.setInverted(InvertType.FollowMaster);
+        m_rightMotorSecondary.setInverted(InvertType.FollowMaster);
+        /* Set status frame periods */
+        m_rightMotorPrimary.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, DriveConstants.kTimeoutMs);
+        m_rightMotorPrimary.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, DriveConstants.kTimeoutMs);
+        m_leftMotorPrimary.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, DriveConstants.kTimeoutMs); // Used
+                                                                                                               // remotely
+                                                                                                               // by
+                                                                                                               // right
+                                                                                                               // Talon,
+                                                                                                               // speed
+                                                                                                               // up
+
+        /* Configure neutral deadband */
+        m_rightMotorPrimary.configNeutralDeadband(DriveConstants.kNeutralDeadband, DriveConstants.kTimeoutMs);
+        m_leftMotorPrimary.configNeutralDeadband(DriveConstants.kNeutralDeadband, DriveConstants.kTimeoutMs);
+
+        /*
+         * max out the peak output (for all modes). However you can
+         * limit the output of a given PID object with configClosedLoopPeakOutput().
+         */
+        m_leftMotorPrimary.configPeakOutputForward(+1.0, DriveConstants.kTimeoutMs);
+        m_leftMotorPrimary.configPeakOutputReverse(-1.0, DriveConstants.kTimeoutMs);
+        m_rightMotorPrimary.configPeakOutputForward(+1.0, DriveConstants.kTimeoutMs);
+        m_rightMotorPrimary.configPeakOutputReverse(-1.0, DriveConstants.kTimeoutMs);
+
+        /* FPID Gains for turn servo */
+        m_rightMotorPrimary.config_kP(DriveConstants.kSlot_Turning, DriveConstants.kGains_Turning.kP,
+                DriveConstants.kTimeoutMs);
+        m_rightMotorPrimary.config_kI(DriveConstants.kSlot_Turning, DriveConstants.kGains_Turning.kI,
+                DriveConstants.kTimeoutMs);
+        m_rightMotorPrimary.config_kD(DriveConstants.kSlot_Turning, DriveConstants.kGains_Turning.kD,
+                DriveConstants.kTimeoutMs);
+        m_rightMotorPrimary.config_kF(DriveConstants.kSlot_Turning, DriveConstants.kGains_Turning.kF,
+                DriveConstants.kTimeoutMs);
+        m_rightMotorPrimary.config_IntegralZone(DriveConstants.kSlot_Turning, DriveConstants.kGains_Turning.kIzone,
+                DriveConstants.kTimeoutMs);
+        m_rightMotorPrimary.configClosedLoopPeakOutput(DriveConstants.kSlot_Turning,
+                DriveConstants.kGains_Turning.kPeakOutput, DriveConstants.kTimeoutMs);
+        m_rightMotorPrimary.configAllowableClosedloopError(DriveConstants.kSlot_Turning, 0, DriveConstants.kTimeoutMs);
+
+        /*
+         * 1ms per loop. PID loop can be slowed down if need be.
+         * For example,
+         * - if sensor updates are too slow
+         * - sensor deltas are very small per update, so derivative error never gets
+         * large enough to be useful.
+         * - sensor movement is very slow causing the derivative error to be near zero.
+         */
+        int closedLoopTimeMs = 1;
+        m_rightMotorPrimary.configClosedLoopPeriod(0, closedLoopTimeMs, DriveConstants.kTimeoutMs);
+        m_rightMotorPrimary.configClosedLoopPeriod(1, closedLoopTimeMs, DriveConstants.kTimeoutMs);
+
+        /*
+         * configAuxPIDPolarity(boolean invert, int timeoutMs)
+         * false means talon's local output is PID0 + PID1, and other side Talon is PID0
+         * - PID1
+         * true means talon's local output is PID0 - PID1, and other side Talon is PID0
+         * + PID1
+         */
+        m_rightMotorPrimary.configAuxPIDPolarity(false, DriveConstants.kTimeoutMs);
     }
 
     public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
@@ -127,6 +239,12 @@ public class DriveSubsystem extends SubsystemBase {
     public void arcadeDrive(double fwd, double rot) {
         var wheelSpeeds = m_kinematics.toWheelSpeeds(new ChassisSpeeds(fwd, 0.0, rot));
         setSpeeds(wheelSpeeds);
+    }
+
+    public void encoderArcadeDrive(double fwd, double rot) {
+        m_leftMotorPrimary.set(ControlMode.PercentOutput, fwd, DemandType.ArbitraryFeedForward, rot);
+        m_rightMotorPrimary.set(ControlMode.PercentOutput, fwd, DemandType.ArbitraryFeedForward, rot);
+
     }
 
     /**

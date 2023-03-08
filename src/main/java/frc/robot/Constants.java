@@ -22,10 +22,17 @@ public final class Constants {
     public static final int kLeftMotorSecondaryPort = 17;
     public static final int kRightMotorPrimaryPort = 8;
     public static final int kRightMotorSecondaryPort = 18;
+    public static final int kTurnTravelUnitsPerRotation = 3600;
+    public static final int kEncoderUnitsPerRotation = 51711; // number is added by experimentation
+    public final static double kNeutralDeadband = 0.001;
+    public final static Gains kGains_Turning = new Gains(2.0, 0.0, 4.0, 0.0, 200, 1.00);
     public final static int kTimeoutMs = 30;
     public final static int PID_PRIMARY = 0;
     public final static int REMOTE_0 = 0;
     public final static int REMOTE_1 = 1;
+    public final static int PID_TURN = 1;
+    public final static int SLOT_1 = 1;
+    public final static int kSlot_Turning = SLOT_1;
   }
 
   public static final class ElevatorConstants {
