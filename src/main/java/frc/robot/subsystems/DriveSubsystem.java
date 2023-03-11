@@ -4,13 +4,8 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import com.ctre.phoenix.motorcontrol.DemandType;
 //import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -18,12 +13,12 @@ import frc.robot.Constants.DriveConstants;
 import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 //import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.FollowerType;
 
 public class DriveSubsystem extends SubsystemBase {
         private static final WPI_TalonSRX m_leftMotorPrimary = new WPI_TalonSRX(DriveConstants.kLeftMotorPrimaryPort);
@@ -35,33 +30,27 @@ public class DriveSubsystem extends SubsystemBase {
         // we need to find these values
         public static double kMaxSpeed = 3.0; // meters per second
         public static final double kMaxAngularSpeed = 2 * Math.PI; // one rotation per second
-        private static final double kTrackWidth = 0.381 * 2; // meters
-        private static final double kWheelRadius = 0.0508; // meter
-        private static final int kEncoderResolution = 4096;
-        private final Encoder m_leftEncoder = new Encoder(0, 1);
-        private final Encoder m_rightEncoder = new Encoder(2, 3);
         // private final AnalogGyro m_gyro = new AnalogGyro(0);
         // we need to find these values
-        private final PIDController m_leftPIDController = new PIDController(1, 0, 0);
-        private final PIDController m_rightPIDController = new PIDController(1, 0, 0);
         // The motors on the left side of the drive.
-        private final MotorControllerGroup m_leftMotors = new MotorControllerGroup(
-                        m_leftMotorPrimary,
-                        m_leftMotorSecondary);
 
-        // The motors on the right side of the drive.
-        private final MotorControllerGroup m_rightMotors = new MotorControllerGroup(
-                        m_rightMotorPrimary,
-                        m_rightMotorSecondary);
+        private double _targetAngle = 0.0;
 
         // The robot's drive
-
-        private final DifferentialDriveKinematics m_kinematics = new DifferentialDriveKinematics(kTrackWidth);
 
         // private final DifferentialDriveOdometry m_odometry;
 
         // Gains are for example purposes only - must be determined for your own robot!
-        private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1, 3);
+        private static boolean _isDriveStraightMode = false;
+
+        public void toggleDriveMode() {
+                _isDriveStraightMode = !_isDriveStraightMode;
+
+                // Initialize based on the mode
+                if (_isDriveStraightMode) {
+                        initEncoderStraightDrive();
+                }
+        }
 
         public DriveSubsystem() {
                 // m_gyro.reset();
@@ -103,6 +92,9 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rightMotorPrimary.setNeutralMode(NeutralMode.Brake);
                 m_rightMotorSecondary.setNeutralMode(NeutralMode.Brake);
 
+                /*
+                 * Configure the drivetrain's left side Feedback Sensor as a Quadrature Encoder
+                 */
                 m_leftMotorPrimary.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, // Local Feedback Source
                                 DriveConstants.PID_PRIMARY, // PID Slot for Source [0, 1]
                                 DriveConstants.kTimeoutMs); // Configuration Timeout
@@ -116,9 +108,6 @@ public class DriveSubsystem extends SubsystemBase {
                                 DriveConstants.REMOTE_0, // Source number [0, 1]
                                 DriveConstants.kTimeoutMs); // Configuration Timeout
 
-                // m_odometry = new DifferentialDriveOdometry(
-                // m_gyro.getRotation2d(), m_leftEncoder.getDistance(),
-                // m_rightEncoder.getDistance());
                 /*
                  * Setup difference signal to be used for turn when performing Drive Straight
                  * with encoders
@@ -135,6 +124,7 @@ public class DriveSubsystem extends SubsystemBase {
                                                             // of
                                                             // current
                                                             // Talon
+
                 /*
                  * Difference term calculated by right Talon configured to be selected sensor of
                  * turn PID
@@ -158,23 +148,27 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rightMotorPrimary.configSelectedFeedbackCoefficient(
                                 DriveConstants.kTurnTravelUnitsPerRotation / DriveConstants.kEncoderUnitsPerRotation, // Coefficient
                                 DriveConstants.PID_TURN, // PID Slot of Source
-                                DriveConstants.kTimeoutMs);
-                m_rightMotorPrimary.setInverted(true);
+                                DriveConstants.kTimeoutMs); // Configuration Timeout
+
+                /* Configure output and sensor direction */
                 m_leftMotorPrimary.setInverted(false);
                 m_leftMotorSecondary.setInverted(InvertType.FollowMaster);
+                m_leftMotorPrimary.setSensorPhase(true);
+                m_rightMotorPrimary.setInverted(true);
                 m_rightMotorSecondary.setInverted(InvertType.FollowMaster);
+                m_rightMotorPrimary.setSensorPhase(true);
+
                 /* Set status frame periods */
                 m_rightMotorPrimary.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20,
                                 DriveConstants.kTimeoutMs);
                 m_rightMotorPrimary.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20,
                                 DriveConstants.kTimeoutMs);
                 m_leftMotorPrimary.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, DriveConstants.kTimeoutMs); // Used
-                                                                                                                       // remotely
-                                                                                                                       // by
-                                                                                                                       // right
-                                                                                                                       // Talon,
-                                                                                                                       // speed
-                                                                                                                       // up
+                // remotely
+                // by
+                // right
+                // Talon,
+                // speed up
 
                 /* Configure neutral deadband */
                 m_rightMotorPrimary.configNeutralDeadband(DriveConstants.kNeutralDeadband, DriveConstants.kTimeoutMs);
@@ -184,10 +178,10 @@ public class DriveSubsystem extends SubsystemBase {
                  * max out the peak output (for all modes). However you can
                  * limit the output of a given PID object with configClosedLoopPeakOutput().
                  */
-                m_leftMotorPrimary.configPeakOutputForward(+1.0, DriveConstants.kTimeoutMs);
-                m_leftMotorPrimary.configPeakOutputReverse(-1.0, DriveConstants.kTimeoutMs);
-                m_rightMotorPrimary.configPeakOutputForward(+1.0, DriveConstants.kTimeoutMs);
-                m_rightMotorPrimary.configPeakOutputReverse(-1.0, DriveConstants.kTimeoutMs);
+                m_leftMotorPrimary.configPeakOutputForward(+0.3, DriveConstants.kTimeoutMs);
+                m_leftMotorPrimary.configPeakOutputReverse(-0.3, DriveConstants.kTimeoutMs);
+                m_rightMotorPrimary.configPeakOutputForward(+0.3, DriveConstants.kTimeoutMs);
+                m_rightMotorPrimary.configPeakOutputReverse(-0.3, DriveConstants.kTimeoutMs);
 
                 /* FPID Gains for turn servo */
                 m_rightMotorPrimary.config_kP(DriveConstants.kSlot_Turning, DriveConstants.kGains_Turning.kP,
@@ -202,7 +196,8 @@ public class DriveSubsystem extends SubsystemBase {
                                 DriveConstants.kGains_Turning.kIzone,
                                 DriveConstants.kTimeoutMs);
                 m_rightMotorPrimary.configClosedLoopPeakOutput(DriveConstants.kSlot_Turning,
-                                DriveConstants.kGains_Turning.kPeakOutput, DriveConstants.kTimeoutMs);
+                                DriveConstants.kGains_Turning.kPeakOutput,
+                                DriveConstants.kTimeoutMs);
                 m_rightMotorPrimary.configAllowableClosedloopError(DriveConstants.kSlot_Turning, 0,
                                 DriveConstants.kTimeoutMs);
 
@@ -226,18 +221,9 @@ public class DriveSubsystem extends SubsystemBase {
                  * + PID1
                  */
                 m_rightMotorPrimary.configAuxPIDPolarity(false, DriveConstants.kTimeoutMs);
-        }
 
-        public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
-                final double leftFeedforward = m_feedforward.calculate(speeds.leftMetersPerSecond);
-                final double rightFeedforward = m_feedforward.calculate(speeds.rightMetersPerSecond);
-
-                final double leftOutput = m_leftPIDController.calculate(m_leftEncoder.getRate(),
-                                speeds.leftMetersPerSecond);
-                final double rightOutput = m_rightPIDController.calculate(m_rightEncoder.getRate(),
-                                speeds.rightMetersPerSecond);
-                m_leftMotors.setVoltage(leftOutput + leftFeedforward);
-                m_rightMotors.setVoltage(rightOutput + rightFeedforward);
+                /* Initialize */
+                zeroSensors();
         }
 
         /**
@@ -247,14 +233,45 @@ public class DriveSubsystem extends SubsystemBase {
          * @param rot the commanded rotation
          */
         public void arcadeDrive(double fwd, double rot) {
-                var wheelSpeeds = m_kinematics.toWheelSpeeds(new ChassisSpeeds(fwd, 0.0, rot));
-                setSpeeds(wheelSpeeds);
+                // var wheelSpeeds = m_kinematics.toWheelSpeeds(new ChassisSpeeds(fwd, 0.0,
+                // rot));
+                // setSpeeds(wheelSpeeds);
+                SmartDashboard.putBoolean("Drive straight mode", _isDriveStraightMode);
+                if (_isDriveStraightMode) {
+                        encoderStraightDrive(fwd);
+                } else {
+                        encoderArcadeDrive(fwd, rot);
+                }
         }
 
         public void encoderArcadeDrive(double fwd, double rot) {
-                m_leftMotorPrimary.set(ControlMode.PercentOutput, fwd, DemandType.ArbitraryFeedForward, rot);
-                m_rightMotorPrimary.set(ControlMode.PercentOutput, fwd, DemandType.ArbitraryFeedForward, rot);
+                m_leftMotorPrimary.set(ControlMode.PercentOutput, fwd, DemandType.ArbitraryFeedForward, +rot);
+                m_rightMotorPrimary.set(ControlMode.PercentOutput, fwd, DemandType.ArbitraryFeedForward, -rot);
+        }
 
+        public void initEncoderStraightDrive() {
+                System.out.println("This is Drive Straight using the auxiliary feature with " +
+                                "the difference between two encoders to maintain current heading.\n");
+
+                /* Determine which slot affects which PID */
+                m_rightMotorPrimary.selectProfileSlot(DriveConstants.kSlot_Turning, DriveConstants.PID_TURN);
+                _targetAngle = m_rightMotorPrimary.getSelectedSensorPosition(1);
+        }
+
+        public void encoderStraightDrive(double fwd) {
+                // in the example code, this line was updated only when button status changed
+                // curious to see what happens when it is here instead
+                // - Joey Muller
+                // double _targetAngle = 0;
+                // _targetAngle = m_rightMotorPrimary.getSelectedSensorPosition(1);
+
+                /*
+                 * Configured for percentOutput with Auxiliary PID on Quadrature Encoders'
+                 * Difference
+                 */
+                // TODO: try .follow() before .set()
+                m_rightMotorPrimary.set(ControlMode.PercentOutput, fwd, DemandType.AuxPID, _targetAngle);
+                m_leftMotorPrimary.follow(m_rightMotorPrimary, FollowerType.AuxOutput1);
         }
 
         /**

@@ -25,7 +25,7 @@ public final class Constants {
     public static final int kTurnTravelUnitsPerRotation = 3600;
     public static final int kEncoderUnitsPerRotation = 51711; // number is added by experimentation
     public final static double kNeutralDeadband = 0.001;
-    public final static Gains kGains_Turning = new Gains(2.0, 0.0, 4.0, 0.0, 200, 1.00);
+    public final static Gains kGains_Turning = new Gains(1.5, 0.0, 4.0, 0.0, 200, 1.00);
     public final static int kTimeoutMs = 30;
     public final static int PID_PRIMARY = 0;
     public final static int REMOTE_0 = 0;

@@ -18,9 +18,9 @@ import frc.robot.subsystems.ClawSubsystem;
 public class RobotContainer {
         // The robot's subsystems
         private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-        private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
-        private final ArmSubsystem m_robotArm = new ArmSubsystem();
-        private final ClawSubsystem m_robotClaw = new ClawSubsystem();
+        // private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
+        // private final ArmSubsystem m_robotArm = new ArmSubsystem();
+        // private final ClawSubsystem m_robotClaw = new ClawSubsystem();
         // The driver's controller
         CommandXboxController m_driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
 
@@ -36,7 +36,7 @@ public class RobotContainer {
                                 // hand, and turning controlled by the right.
                                 Commands.run(
                                                 () -> m_robotDrive.arcadeDrive(
-                                                                m_driverController.getLeftY(),
+                                                                -m_driverController.getLeftY(),
                                                                 -m_driverController.getLeftX()),
                                                 m_robotDrive));
         }
@@ -51,38 +51,42 @@ public class RobotContainer {
                                 .onTrue(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.5)))
                                 .onFalse(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.8)));
 
-                // This is for elevator up and down movement.
-                m_driverController // This moves elevator up
-                                .y()
-                                .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-0.1)));
-
-                m_driverController // This moves elevator down
-                                .a()
-                                .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.2)));
-
-                // // This is for arm movement forward and backward.
-                m_driverController // This moves arm backwards
-                                .x()
-                                .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(-0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
-
-                m_driverController // This moves arm forwards
+                m_driverController // This toggle drive modes
                                 .b()
-                                .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
+                                .onTrue(Commands.runOnce(() -> m_robotDrive.toggleDriveMode()));
 
-                // This is for claw movement to open.
-                m_CoDriverController
-                                .button(3)
-                                .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
-                // This is for claw movement to close.
-                m_CoDriverController
-                                .button(2)
-                                .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(-0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
+                // // This is for elevator up and down movement.
+                // m_driverController // This moves elevator up
+                // .y()
+                // .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-0.5)))
+                // .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-0.1)));
+
+                // m_driverController // This moves elevator down
+                // .a()
+                // .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.5)))
+                // .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.2)));
+
+                // // // This is for arm movement forward and backward.
+                // m_driverController // This moves arm backwards
+                // .x()
+                // .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(-0.5)))
+                // .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
+
+                // m_driverController // This moves arm forwards
+                // .b()
+                // .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(0.5)))
+                // .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
+
+                // // This is for claw movement to open.
+                // m_CoDriverController
+                // .button(3)
+                // .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0.5)))
+                // .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
+                // // This is for claw movement to close.
+                // m_CoDriverController
+                // .button(2)
+                // .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(-0.5)))
+                // .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
 
         }
 
