@@ -92,6 +92,11 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rightMotorPrimary.setNeutralMode(NeutralMode.Brake);
                 m_rightMotorSecondary.setNeutralMode(NeutralMode.Brake);
 
+                m_leftMotorPrimary.configPeakOutputForward(1.0, DriveConstants.kTimeoutMs);
+                m_leftMotorSecondary.configPeakOutputReverse(1.0, DriveConstants.kTimeoutMs);
+                m_rightMotorPrimary.configPeakOutputForward(1.0, DriveConstants.kTimeoutMs);
+                m_rightMotorPrimary.configPeakOutputReverse(1.0, DriveConstants.kTimeoutMs);
+
                 /*
                  * Configure the drivetrain's left side Feedback Sensor as a Quadrature Encoder
                  */
