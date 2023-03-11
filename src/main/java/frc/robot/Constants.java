@@ -18,10 +18,10 @@ package frc.robot;
  */
 public final class Constants {
   public static final class DriveConstants {
-    public static final int kLeftMotorPrimaryPort = 7;
-    public static final int kLeftMotorSecondaryPort = 17;
-    public static final int kRightMotorPrimaryPort = 8;
-    public static final int kRightMotorSecondaryPort = 18;
+    public static final int kLeftMotorPrimaryPort = 4;
+    public static final int kLeftMotorSecondaryPort = 18;
+    public static final int kRightMotorPrimaryPort = 17;
+    public static final int kRightMotorSecondaryPort = 7;
     public static final int kTurnTravelUnitsPerRotation = 3600;
     public static final int kEncoderUnitsPerRotation = 51711; // number is added by experimentation
     public final static double kNeutralDeadband = 0.001;
