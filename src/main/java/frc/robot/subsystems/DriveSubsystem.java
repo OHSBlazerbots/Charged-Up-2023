@@ -5,14 +5,12 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.DemandType;
-//import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import frc.robot.Constants.DriveConstants;
 import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
-//import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -30,17 +28,9 @@ public class DriveSubsystem extends SubsystemBase {
         // we need to find these values
         public static double kMaxSpeed = 3.0; // meters per second
         public static final double kMaxAngularSpeed = 2 * Math.PI; // one rotation per second
-        // private final AnalogGyro m_gyro = new AnalogGyro(0);
-        // we need to find these values
-        // The motors on the left side of the drive.
+        
 
         private double _targetAngle = 0.0;
-
-        // The robot's drive
-
-        // private final DifferentialDriveOdometry m_odometry;
-
-        // Gains are for example purposes only - must be determined for your own robot!
         private static boolean _isDriveStraightMode = false;
 
         public void toggleDriveMode() {
@@ -52,26 +42,7 @@ public class DriveSubsystem extends SubsystemBase {
                 }
         }
 
-        public DriveSubsystem() {
-                // m_gyro.reset();
-                // We need to invert one side of the drivetrain so that positive voltages
-                // result in both sides moving forward. Depending on how your robot's
-                // gearbox is constructed, you might have to invert the left side instead.
-                // m_rightMotors.setInverted(true);
-                // wpi.java.configureTestTasks(test)
-
-                // Set the distance per pulse for the drive encoders. We can simply use the
-                // distance traveled for one rotation of the wheel divided by the encoder
-                // resolution.
-                /**
-                 * m_leftEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius /
-                 * kEncoderResolution);
-                 * m_rightEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius /
-                 * kEncoderResolution);
-                 * 
-                 * m_leftEncoder.reset();
-                 * m_rightEncoder.reset();
-                 **/
+        public DriveSubsystem() { 
                 // Reset each talon to factory default
                 // If we have to swap talons, we want to make sure
                 // the new talon is configured properly
@@ -238,9 +209,7 @@ public class DriveSubsystem extends SubsystemBase {
          * @param rot the commanded rotation
          */
         public void arcadeDrive(double fwd, double rot) {
-                // var wheelSpeeds = m_kinematics.toWheelSpeeds(new ChassisSpeeds(fwd, 0.0,
-                // rot));
-                // setSpeeds(wheelSpeeds);
+                
                 SmartDashboard.putBoolean("Drive straight mode", _isDriveStraightMode);
                 if (_isDriveStraightMode) {
                         encoderStraightDrive(fwd);
@@ -264,12 +233,6 @@ public class DriveSubsystem extends SubsystemBase {
         }
 
         public void encoderStraightDrive(double fwd) {
-                // in the example code, this line was updated only when button status changed
-                // curious to see what happens when it is here instead
-                // - Joey Muller
-                // double _targetAngle = 0;
-                // _targetAngle = m_rightMotorPrimary.getSelectedSensorPosition(1);
-
                 /*
                  * Configured for percentOutput with Auxiliary PID on Quadrature Encoders'
                  * Difference
@@ -290,11 +253,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         }
 
-        // public void updateOdometry() {
-        // m_odometry.update(
-        // m_gyro.getRotation2d(), m_leftEncoder.getDistance(),
-        // m_rightEncoder.getDistance());
-        // }
+       
         void zeroSensors() {
                 m_leftMotorPrimary.getSensorCollection().setQuadraturePosition(0, DriveConstants.kTimeoutMs);
                 m_rightMotorPrimary.getSensorCollection().setQuadraturePosition(0, DriveConstants.kTimeoutMs);
