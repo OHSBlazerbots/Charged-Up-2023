@@ -48,8 +48,8 @@ public class RobotContainer {
                                                 m_robotDrive));
                 // Add commands to the autonomous command chooser
                m_chooser.setDefaultOption("Simple Auto", m_SimpleAuto);
-               m_chooser.addOption("Complex Auto", m_ComplexAuto);
-               m_chooser.addOption("Complex Auto", m_NothingAuto);
+               //m_chooser.addOption("Complex Auto", m_ComplexAuto);
+               m_chooser.addOption("Nothing Auto", m_NothingAuto);
                // Put the chooser on the dashboard
                 SmartDashboard.putData(m_chooser);
 
