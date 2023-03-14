@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -21,6 +23,11 @@ public class RobotContainer {
         private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
         private final ArmSubsystem m_robotArm = new ArmSubsystem();
         private final ClawSubsystem m_robotClaw = new ClawSubsystem();
+        private final Command m_SimpleAuto = new DriveStraightAutoCommand(m_robotDrive);
+        private final Command m_ComplexAuto = new DriveStraightAutoCommand(m_robotDrive);
+        private final Command m_NothingAuto = null;
+        SendableChooser<Command> m_chooser = new SendableChooser<>();
+
         // The driver's controller
         CommandXboxController m_driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
 
@@ -39,7 +46,19 @@ public class RobotContainer {
                                                                 -m_driverController.getLeftY(),
                                                                 -m_driverController.getLeftX()),
                                                 m_robotDrive));
+                // Add commands to the autonomous command chooser
+               m_chooser.setDefaultOption("Simple Auto", m_SimpleAuto);
+               m_chooser.addOption("Complex Auto", m_ComplexAuto);
+               m_chooser.addOption("Complex Auto", m_NothingAuto);
+               // Put the chooser on the dashboard
+                SmartDashboard.putData(m_chooser);
+
+               
+                
+                      
         }
+        
+        
 
         /**
          * Use this method to define your button->command mappings
@@ -92,7 +111,8 @@ public class RobotContainer {
 
         public Command getAutonomousCommand() {
                 // Drives forward at specific speed at a specific time
-                return new DriveStraightAutoCommand(m_robotDrive);
+                //return new DriveStraightAutoCommand(m_robotDrive);
+                return m_chooser.getSelected();
 
         }
 }
