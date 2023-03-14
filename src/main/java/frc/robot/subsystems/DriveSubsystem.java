@@ -26,8 +26,8 @@ public class DriveSubsystem extends SubsystemBase {
         private static final WPI_TalonSRX m_rightMotorSecondary = new WPI_TalonSRX(
                         DriveConstants.kRightMotorSecondaryPort);
         // we need to find these values
-        public static double kMaxSpeed = 3.0; // meters per second
-        public static final double kMaxAngularSpeed = 2 * Math.PI; // one rotation per second
+        public static double kMaxSpeed = 3.0; 
+        
         
 
         private double _targetAngle = 0.0;
