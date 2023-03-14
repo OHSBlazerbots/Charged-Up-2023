@@ -51,7 +51,7 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final double kDriveTimeSeconds = 2;
+    public static final double kDriveTimeSeconds = 7;
   }
 
   public static final class IOConstants {

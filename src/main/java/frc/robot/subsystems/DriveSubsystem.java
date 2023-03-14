@@ -52,6 +52,12 @@ public class DriveSubsystem extends SubsystemBase {
                 }
         }
 
+        public void setDriveStraight() {
+                if (!_isDriveStraightMode) {
+                        toggleDriveMode();
+                }
+        }
+
         public DriveSubsystem() {
                 // m_gyro.reset();
                 // We need to invert one side of the drivetrain so that positive voltages
