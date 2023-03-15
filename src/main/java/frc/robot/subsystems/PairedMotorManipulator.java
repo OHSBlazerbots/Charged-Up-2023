@@ -8,22 +8,30 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import frc.robot.Constants.DriveConstants;
+
+import frc.robot.Gains;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 
-public class PairedMotorManipulator extends SubsystemBase {
-        private static final WPI_TalonSRX m_motorPrimary = new WPI_TalonSRX(DriveConstants.kMotorPrimaryPort);
-        private static final WPI_TalonSRX m_motorSecondary = new WPI_TalonSRX(
-                        DriveConstants.kMotorSecondaryPort);
+public class PairedMotorManipulator {
+        private static final int PID_PRIMARY = 0;
+        private static final int TIMEOUT_MS = 30;
 
-        public static double kMaxSpeed = 0.5;
+        private final WPI_TalonSRX m_motorPrimary;
+        private final WPI_TalonSRX m_motorSecondary;
 
+        private final Gains _kGains;
+        private double maxSpeed = 0.5;
         private double targetRotations = 0.0;
 
-        public PairedMotorManipulator() {
+        public PairedMotorManipulator(Gains gains, int primaryPort, int secondaryPort) {
+                _kGains = gains;
+
+                m_motorPrimary = new WPI_TalonSRX(primaryPort);
+                m_motorSecondary = new WPI_TalonSRX(
+                                secondaryPort);
+
                 // Reset each talon to factory default
                 // If we have to swap talons, we want to make sure
                 // the new talon is configured properly
@@ -38,9 +46,7 @@ public class PairedMotorManipulator extends SubsystemBase {
                 m_motorSecondary.setNeutralMode(NeutralMode.Brake);
 
                 /* Config the local sensor used for Primary PID and sensor direction */
-                m_motorPrimary.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,
-                                DriveConstants.PID_PRIMARY,
-                                DriveConstants.kTimeoutMs);
+                m_motorPrimary.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, PID_PRIMARY, TIMEOUT_MS);
 
                 /* Configure output and sensor direction */
                 m_motorPrimary.setInverted(true);
@@ -48,30 +54,25 @@ public class PairedMotorManipulator extends SubsystemBase {
                 m_motorPrimary.setSensorPhase(true);
 
                 /* Config the peak and nominal outputs */
-                m_motorPrimary.configNominalOutputForward(0.0, DriveConstants.kTimeoutMs);
-                m_motorPrimary.configNominalOutputReverse(0.0, DriveConstants.kTimeoutMs);
-                m_motorPrimary.configPeakOutputForward(1.0, DriveConstants.kTimeoutMs);
-                m_motorPrimary.configPeakOutputReverse(-1.0, DriveConstants.kTimeoutMs);
+                m_motorPrimary.configNominalOutputForward(0.0, TIMEOUT_MS);
+                m_motorPrimary.configNominalOutputReverse(0.0, TIMEOUT_MS);
+                m_motorPrimary.configPeakOutputForward(1.0, TIMEOUT_MS);
+                m_motorPrimary.configPeakOutputReverse(-1.0, TIMEOUT_MS);
 
                 /**
                  * Config the allowable closed-loop error, Closed-Loop output will be
                  * neutral within this range. See Table in Section 17.2.1 for native
                  * units per rotation.
                  */
-                m_motorPrimary.configAllowableClosedloopError(0, DriveConstants.PID_PRIMARY,
-                                DriveConstants.kTimeoutMs);
+                m_motorPrimary.configAllowableClosedloopError(0, PID_PRIMARY, TIMEOUT_MS);
 
                 /*
                  * Config Position Closed Loop gains for primary PID, tsypically kF stays zero.
                  */
-                m_motorPrimary.config_kF(DriveConstants.PID_PRIMARY, Constants.kGains.kF,
-                                DriveConstants.kTimeoutMs);
-                m_motorPrimary.config_kP(DriveConstants.PID_PRIMARY, Constants.kGains.kP,
-                                DriveConstants.kTimeoutMs);
-                m_motorPrimary.config_kI(DriveConstants.PID_PRIMARY, Constants.kGains.kI,
-                                DriveConstants.kTimeoutMs);
-                m_motorPrimary.config_kD(DriveConstants.PID_PRIMARY, Constants.kGains.kD,
-                                DriveConstants.kTimeoutMs);
+                m_motorPrimary.config_kF(PID_PRIMARY, _kGains.kF, TIMEOUT_MS);
+                m_motorPrimary.config_kP(PID_PRIMARY, _kGains.kP, TIMEOUT_MS);
+                m_motorPrimary.config_kI(PID_PRIMARY, _kGains.kI, TIMEOUT_MS);
+                m_motorPrimary.config_kD(PID_PRIMARY, _kGains.kD, TIMEOUT_MS);
 
                 /*
                  * 1ms per loop. PID loop can be slowed down if need be.
@@ -82,8 +83,8 @@ public class PairedMotorManipulator extends SubsystemBase {
                  * - sensor movement is very slow causing the derivative error to be near zero.
                  */
                 int closedLoopTimeMs = 1;
-                m_motorPrimary.configClosedLoopPeriod(0, closedLoopTimeMs, DriveConstants.kTimeoutMs);
-                m_motorPrimary.configClosedLoopPeriod(1, closedLoopTimeMs, DriveConstants.kTimeoutMs);
+                m_motorPrimary.configClosedLoopPeriod(0, closedLoopTimeMs, TIMEOUT_MS);
+                m_motorPrimary.configClosedLoopPeriod(1, closedLoopTimeMs, TIMEOUT_MS);
 
                 /* Initialize */
                 zeroSensors();
@@ -93,8 +94,7 @@ public class PairedMotorManipulator extends SubsystemBase {
          * Rotates the motors to achive the desired position on the encoders.
          * TODO: determine if this should be called from a loop
          *
-         * @param fwd the commanded forward movement
-         * @param rot the commanded rotation
+         * @param position the commanded position
          */
         public void goToPosition(double position) {
                 targetRotations = position;
@@ -109,8 +109,9 @@ public class PairedMotorManipulator extends SubsystemBase {
          * @param maxOutput the maximum output to which the drive will be constrained
          */
         public void setMaxOutput(double maxOutput) {
-                kMaxSpeed = maxOutput;
+                maxSpeed = maxOutput;
                 // TODO: prevent setting outside range (0, +1)
+                // TODO: make this actually affect motors
 
         }
 
@@ -128,12 +129,12 @@ public class PairedMotorManipulator extends SubsystemBase {
                 // TODO: code to ensure this
 
                 /* Set the quadrature (relative) sensor to match absolute */
-                m_motorPrimary.setSelectedSensorPosition(absolutePosition, DriveConstants.PID_PRIMARY,
-                                DriveConstants.kTimeoutMs);
+                m_motorPrimary.setSelectedSensorPosition(absolutePosition, PID_PRIMARY,
+                                TIMEOUT_MS);
         }
 
         void setPositionZero() {
-                m_motorPrimary.getSensorCollection().setQuadraturePosition(0, DriveConstants.kTimeoutMs);
+                m_motorPrimary.getSensorCollection().setQuadraturePosition(0, TIMEOUT_MS);
                 System.out.println("[Quadrature Encoders] All sensors are zeroed.\n");
         }
 }
