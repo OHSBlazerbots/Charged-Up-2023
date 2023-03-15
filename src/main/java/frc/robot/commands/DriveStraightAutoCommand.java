@@ -12,14 +12,12 @@ public class DriveStraightAutoCommand extends CommandBase {
      */
     DriveSubsystem driveSubsystem;
     Timer timer;
-    AutoBalance autoBalance;
 
     public DriveStraightAutoCommand(DriveSubsystem subsystem) {
         // Use addRequirements() here to declare subsystem dependencies.
         driveSubsystem = subsystem;
         addRequirements(driveSubsystem);
         timer = new Timer();
-        autoBalance = new AutoBalance();
     }
 
     // Called when the command is initially scheduled.
@@ -33,7 +31,7 @@ public class DriveStraightAutoCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        driveSubsystem.arcadeDrive(autoBalance.autoBalanceRoutine(), 0);// drive straight at half
+        driveSubsystem.arcadeDrive(-.5, 0);// drive straight at half
     }
 
     // Called once the command ends or is interrupted.

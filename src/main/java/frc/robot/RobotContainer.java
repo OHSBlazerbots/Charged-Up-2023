@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.IOConstants;
 import frc.robot.commands.DriveStraightAutoCommand;
+import frc.robot.commands.DriveStraightAndBalanceAutoCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
@@ -24,7 +25,7 @@ public class RobotContainer {
         private final ArmSubsystem m_robotArm = new ArmSubsystem();
         private final ClawSubsystem m_robotClaw = new ClawSubsystem();
         private final Command m_SimpleAuto = new DriveStraightAutoCommand(m_robotDrive);
-        private final Command m_ComplexAuto = new DriveStraightAutoCommand(m_robotDrive);
+        private final Command m_ComplexAuto = new DriveStraightAndBalanceAutoCommand(m_robotDrive);
         private final Command m_NothingAuto = null;
         SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -47,8 +48,8 @@ public class RobotContainer {
                                                                 -m_driverController.getLeftX()),
                                                 m_robotDrive));
                 // Add commands to the autonomous command chooser
-                m_chooser.setDefaultOption("Simple Auto", m_SimpleAuto);
-                // m_chooser.addOption("Complex Auto", m_ComplexAuto);
+                m_chooser.setDefaultOption("Drive Straight Auto", m_SimpleAuto);
+                m_chooser.addOption("Balance on charging station Auto", m_ComplexAuto);
                 m_chooser.addOption("Nothing Auto", m_NothingAuto);
                 // Put the chooser on the dashboard
                 SmartDashboard.putData(m_chooser);
