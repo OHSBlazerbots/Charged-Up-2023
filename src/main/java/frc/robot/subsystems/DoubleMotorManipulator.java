@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 
-public class PairedMotorManipulator {
+public class DoubleMotorManipulator {
         private static final int PID_PRIMARY = 0;
         private static final int TIMEOUT_MS = 30;
 
@@ -25,7 +25,7 @@ public class PairedMotorManipulator {
         private double maxSpeed = 0.5;
         private double targetRotations = 0.0;
 
-        public PairedMotorManipulator(Gains gains, int primaryPort, int secondaryPort) {
+        public DoubleMotorManipulator(Gains gains, int primaryPort, int secondaryPort) {
                 _kGains = gains;
 
                 m_motorPrimary = new WPI_TalonSRX(primaryPort);
