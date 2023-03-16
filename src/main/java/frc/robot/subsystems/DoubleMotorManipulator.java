@@ -29,29 +29,27 @@ public class DoubleMotorManipulator {
                 _kGains = gains;
 
                 m_motorPrimary = new WPI_TalonSRX(primaryPort);
-                m_motorSecondary = new WPI_TalonSRX(
-                                secondaryPort);
+                m_motorSecondary = new WPI_TalonSRX(secondaryPort);
 
                 // Reset each talon to factory default
                 // If we have to swap talons, we want to make sure
                 // the new talon is configured properly
                 m_motorPrimary.configFactoryDefault();
-                m_motorSecondary.configFactoryDefault();
 
                 m_motorPrimary.set(ControlMode.PercentOutput, 0);
-                m_motorSecondary.follow(m_motorPrimary);
 
                 // Set all motors to brake mode to prevent coasting
                 m_motorPrimary.setNeutralMode(NeutralMode.Brake);
-                m_motorSecondary.setNeutralMode(NeutralMode.Brake);
 
                 /* Config the local sensor used for Primary PID and sensor direction */
                 m_motorPrimary.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, PID_PRIMARY, TIMEOUT_MS);
 
                 /* Configure output and sensor direction */
                 m_motorPrimary.setInverted(true);
-                m_motorSecondary.setInverted(InvertType.FollowMaster);
                 m_motorPrimary.setSensorPhase(true);
+
+                // Configure follower motors
+                configureFollower(m_motorSecondary);
 
                 /* Config the peak and nominal outputs */
                 m_motorPrimary.configNominalOutputForward(0.0, TIMEOUT_MS);
@@ -88,6 +86,20 @@ public class DoubleMotorManipulator {
 
                 /* Initialize */
                 zeroSensors();
+        }
+
+        /**
+         * Set secondary motor(s) to follow the signal of the primary motor.
+         * For high-power configurations where mulitple motors drive a single gearbox.
+         * Only the primary motor is connected to the encoder/feedback device.
+         * 
+         * @param followerMotor Motor to follow the primary motor
+         */
+        private void configureFollower(WPI_TalonSRX followerMotor) {
+                followerMotor.configFactoryDefault();
+                followerMotor.follow(m_motorPrimary);
+                followerMotor.setNeutralMode(NeutralMode.Brake);
+                followerMotor.setInverted(InvertType.FollowMaster);
         }
 
         /**
