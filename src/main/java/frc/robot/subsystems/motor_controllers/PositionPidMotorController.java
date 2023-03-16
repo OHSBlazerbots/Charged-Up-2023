@@ -3,33 +3,32 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
-
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.ControlMode;
+package frc.robot.subsystems.motor_controllers;
 
 import frc.robot.Gains;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-public class DoubleMotorManipulator {
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public class PositionPidMotorController {
         private static final int PID_PRIMARY = 0;
         private static final int TIMEOUT_MS = 30;
 
         private final WPI_TalonSRX m_motorPrimary;
-        private final WPI_TalonSRX m_motorSecondary;
 
         private final Gains _kGains;
         private double maxSpeed = 0.5;
         private double targetRotations = 0.0;
 
-        public DoubleMotorManipulator(Gains gains, int primaryPort, int secondaryPort) {
+        public PositionPidMotorController(Gains gains, int primaryMotorPort) {
                 _kGains = gains;
 
-                m_motorPrimary = new WPI_TalonSRX(primaryPort);
-                m_motorSecondary = new WPI_TalonSRX(secondaryPort);
+                m_motorPrimary = new WPI_TalonSRX(primaryMotorPort);
 
                 // Reset each talon to factory default
                 // If we have to swap talons, we want to make sure
@@ -48,9 +47,6 @@ public class DoubleMotorManipulator {
                 m_motorPrimary.setInverted(true);
                 m_motorPrimary.setSensorPhase(true);
 
-                // Configure follower motors
-                configureFollower(m_motorSecondary);
-
                 /* Config the peak and nominal outputs */
                 m_motorPrimary.configNominalOutputForward(0.0, TIMEOUT_MS);
                 m_motorPrimary.configNominalOutputReverse(0.0, TIMEOUT_MS);
@@ -62,7 +58,7 @@ public class DoubleMotorManipulator {
                  * neutral within this range. See Table in Section 17.2.1 for native
                  * units per rotation.
                  */
-                m_motorPrimary.configAllowableClosedloopError(0, PID_PRIMARY, TIMEOUT_MS);
+                m_motorPrimary.configAllowableClosedloopError(PID_PRIMARY, 0, TIMEOUT_MS);
 
                 /*
                  * Config Position Closed Loop gains for primary PID, tsypically kF stays zero.
@@ -89,13 +85,14 @@ public class DoubleMotorManipulator {
         }
 
         /**
-         * Set secondary motor(s) to follow the signal of the primary motor.
-         * For high-power configurations where mulitple motors drive a single gearbox.
+         * Set secondary motor to follow the signal of the primary motor.
+         * Used for high-power configurations where mulitple motors drive a single
+         * gearbox.
          * Only the primary motor is connected to the encoder/feedback device.
          * 
          * @param followerMotor Motor to follow the primary motor
          */
-        private void configureFollower(WPI_TalonSRX followerMotor) {
+        protected void configureFollower(WPI_TalonSRX followerMotor) {
                 followerMotor.configFactoryDefault();
                 followerMotor.follow(m_motorPrimary);
                 followerMotor.setNeutralMode(NeutralMode.Brake);
@@ -104,7 +101,7 @@ public class DoubleMotorManipulator {
 
         /**
          * Rotates the motors to achive the desired position on the encoders.
-         * TODO: determine if this should be called from a loop
+         * TODO: determine if this should be called from a loop (like arcadeDrive)
          *
          * @param position the commanded position
          */
