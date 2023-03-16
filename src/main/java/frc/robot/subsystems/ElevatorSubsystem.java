@@ -1,22 +1,31 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.subsystems.motor_controllers.PositionPidDualMotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ElevatorSubsystem extends SubsystemBase {
-   private static final WPI_TalonSRX m_elevMotor = new WPI_TalonSRX(ElevatorConstants.kElevMotorPort);
+   private static final PositionPidDualMotorController m_elevController = new PositionPidDualMotorController(
+         ElevatorConstants.kElevGains,
+         ElevatorConstants.kElevMotorPrimaryPort,
+         ElevatorConstants.kElevMotorSecondaryPort);
 
    public ElevatorSubsystem() {
-      m_elevMotor.configFactoryDefault();
+      m_elevController.zeroSensors();
+   }
 
-      m_elevMotor.setNeutralMode(NeutralMode.Brake);
+   public void setElevatorPosition(double targetPosition) throws Exception {
+      // Validation that input position is valid
+      if (targetPosition < 0 || targetPosition > 1) {
+         throw new Exception("Position must be in range [0, 1]");
+      }
+
+      double motorPosition = targetPosition * ElevatorConstants.kElevEncoderRotationsAtMaxHeight;
+      m_elevController.goToPosition(motorPosition);
    }
 
    public void setElevatorSpeed(double speed) {
-      m_elevMotor.set(speed);
+      m_elevController.setOutput(speed);
 
    }
 

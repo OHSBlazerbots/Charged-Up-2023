@@ -22,6 +22,7 @@ public final class Constants {
     public static final int kLeftMotorSecondaryPort = 18;
     public static final int kRightMotorPrimaryPort = 17;
     public static final int kRightMotorSecondaryPort = 7;
+
     public static final int kTurnTravelUnitsPerRotation = 3600;
     public static final int kEncoderUnitsPerRotation = 51711; // number is added by experimentation
     public final static double kNeutralDeadband = 0.001;
@@ -36,7 +37,12 @@ public final class Constants {
   }
 
   public static final class ElevatorConstants {
-    public static final int kElevMotorPort = 3; // 25 is a placeholder
+    // port numbers are placeholders
+    public static final int kElevMotorPrimaryPort = 2;
+    public static final int kElevMotorSecondaryPort = 3;
+
+    public static final Gains kElevGains = new Gains(1.5, 0.0, 4.0, 0.0, 200, 1.00);
+    public static final int kElevEncoderRotationsAtMaxHeight = 100; // TODO: determine emperically
   }
 
   public static final class ArmConstants {
