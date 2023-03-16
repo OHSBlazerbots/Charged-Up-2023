@@ -16,6 +16,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.commands.MoveElevatorCommand;
 
 public class RobotContainer {
         // The robot's subsystems
@@ -79,6 +80,9 @@ public class RobotContainer {
                                 .a()
                                 .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.5)))
                                 .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.2)));
+                m_CoDriverController
+                                .button(3)
+                                .onTrue(new MoveElevatorCommand(m_robotElevator));
 
                 // This is for arm movement forward and backward.
                 m_driverController // This moves arm backwards

@@ -17,6 +17,13 @@ public class ElevatorSubsystem extends SubsystemBase {
 
    public void setElevatorSpeed(double speed) {
       m_elevMotor.set(speed);
+
+   }
+
+   public boolean isAtpositionA() {
+
+      return true;
+      // need to finish implementation, hook up hall effect sensors
    }
 
 }
