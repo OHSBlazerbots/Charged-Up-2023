@@ -59,11 +59,13 @@ public class RobotContainer {
          * Use this method to define your button->command mappings
          */
         private void configureBindings() {
-                // While holding the shoulder button, drive at half speed
+                // Use bumpers to change virtual "gears"
+                m_driverController
+                                .leftBumper()
+                                .onTrue(Commands.runOnce(() -> m_robotDrive.decrementMaxSpeed()));
                 m_driverController
                                 .rightBumper()
-                                .onTrue(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.8)));
+                                .onTrue(Commands.runOnce(() -> m_robotDrive.incrementMaxSpeed()));
 
                 m_driverController // This toggle drive modes
                                 .b()

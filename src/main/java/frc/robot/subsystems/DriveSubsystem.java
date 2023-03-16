@@ -25,10 +25,12 @@ public class DriveSubsystem extends SubsystemBase {
         private static final WPI_TalonSRX m_rightMotorPrimary = new WPI_TalonSRX(DriveConstants.kRightMotorPrimaryPort);
         private static final WPI_TalonSRX m_rightMotorSecondary = new WPI_TalonSRX(
                         DriveConstants.kRightMotorSecondaryPort);
-        // we need to find these values
-        public static double kMaxSpeed = 3.0; 
-        
-        
+
+        // Virtual gears
+        private static double kMaxSpeed = 0.3;
+        private static final double SPEED_CHANGE_INTERVAL = 0.1;
+        private static final double MAX_SPEED_ALLOWED = 0.8;
+        private static final double MIN_SPEED_ALLOWED = 0.1;
 
         private double _targetAngle = 0.0;
         private static boolean _isDriveStraightMode = false;
@@ -42,7 +44,24 @@ public class DriveSubsystem extends SubsystemBase {
                 }
         }
 
-        public DriveSubsystem() { 
+        public void incrementMaxSpeed() {
+                kMaxSpeed += SPEED_CHANGE_INTERVAL;
+
+                if (kMaxSpeed > MAX_SPEED_ALLOWED) {
+                        kMaxSpeed = MAX_SPEED_ALLOWED;
+                }
+
+        }
+
+        public void decrementMaxSpeed() {
+                kMaxSpeed -= SPEED_CHANGE_INTERVAL;
+
+                if (kMaxSpeed < MIN_SPEED_ALLOWED) {
+                        kMaxSpeed = MIN_SPEED_ALLOWED;
+                }
+        }
+
+        public DriveSubsystem() {
                 // Reset each talon to factory default
                 // If we have to swap talons, we want to make sure
                 // the new talon is configured properly
@@ -88,18 +107,13 @@ public class DriveSubsystem extends SubsystemBase {
                  * Setup difference signal to be used for turn when performing Drive Straight
                  * with encoders
                  */
+                // Feedback Device of Remote Talon
                 m_rightMotorPrimary.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.RemoteSensor0,
-                                DriveConstants.kTimeoutMs); // Feedback
-                                                            // Device
-                                                            // of
-                                                            // Remote
-                                                            // Talon
+                                DriveConstants.kTimeoutMs);
+
+                // Quadrature Encoder of current Talon
                 m_rightMotorPrimary.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.QuadEncoder,
-                                DriveConstants.kTimeoutMs); // Quadrature
-                                                            // Encoder
-                                                            // of
-                                                            // current
-                                                            // Talon
+                                DriveConstants.kTimeoutMs);
 
                 /*
                  * Difference term calculated by right Talon configured to be selected sensor of
@@ -139,12 +153,8 @@ public class DriveSubsystem extends SubsystemBase {
                                 DriveConstants.kTimeoutMs);
                 m_rightMotorPrimary.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20,
                                 DriveConstants.kTimeoutMs);
-                m_leftMotorPrimary.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, DriveConstants.kTimeoutMs); // Used
-                // remotely
-                // by
-                // right
-                // Talon,
-                // speed up
+                // Used remotely by right Talon, speed up
+                m_leftMotorPrimary.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, DriveConstants.kTimeoutMs);
 
                 /* Configure neutral deadband */
                 m_rightMotorPrimary.configNeutralDeadband(DriveConstants.kNeutralDeadband, DriveConstants.kTimeoutMs);
@@ -154,10 +164,10 @@ public class DriveSubsystem extends SubsystemBase {
                  * max out the peak output (for all modes). However you can
                  * limit the output of a given PID object with configClosedLoopPeakOutput().
                  */
-                m_leftMotorPrimary.configPeakOutputForward(+0.3, DriveConstants.kTimeoutMs);
-                m_leftMotorPrimary.configPeakOutputReverse(-0.3, DriveConstants.kTimeoutMs);
-                m_rightMotorPrimary.configPeakOutputForward(+0.3, DriveConstants.kTimeoutMs);
-                m_rightMotorPrimary.configPeakOutputReverse(-0.3, DriveConstants.kTimeoutMs);
+                m_leftMotorPrimary.configPeakOutputForward(+1.0, DriveConstants.kTimeoutMs);
+                m_leftMotorPrimary.configPeakOutputReverse(-1.0, DriveConstants.kTimeoutMs);
+                m_rightMotorPrimary.configPeakOutputForward(+1.0, DriveConstants.kTimeoutMs);
+                m_rightMotorPrimary.configPeakOutputReverse(-1.0, DriveConstants.kTimeoutMs);
 
                 /* FPID Gains for turn servo */
                 m_rightMotorPrimary.config_kP(DriveConstants.kSlot_Turning, DriveConstants.kGains_Turning.kP,
@@ -209,12 +219,16 @@ public class DriveSubsystem extends SubsystemBase {
          * @param rot the commanded rotation
          */
         public void arcadeDrive(double fwd, double rot) {
-                
+                // Scale movement based on max speed
+                double adjustedFwd = kMaxSpeed * fwd;
+                double adjustedRot = kMaxSpeed * rot;
+                SmartDashboard.putNumber("Max Drive speed", kMaxSpeed);
+
                 SmartDashboard.putBoolean("Drive straight mode", _isDriveStraightMode);
                 if (_isDriveStraightMode) {
-                        encoderStraightDrive(fwd);
+                        encoderStraightDrive(adjustedFwd);
                 } else {
-                        encoderArcadeDrive(fwd, rot);
+                        encoderArcadeDrive(adjustedFwd, adjustedRot);
                 }
         }
 
@@ -253,7 +267,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         }
 
-       
         void zeroSensors() {
                 m_leftMotorPrimary.getSensorCollection().setQuadraturePosition(0, DriveConstants.kTimeoutMs);
                 m_rightMotorPrimary.getSensorCollection().setQuadraturePosition(0, DriveConstants.kTimeoutMs);
