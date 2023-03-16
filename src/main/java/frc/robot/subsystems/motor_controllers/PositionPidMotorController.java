@@ -99,6 +99,20 @@ public class PositionPidMotorController {
                 followerMotor.setInverted(InvertType.FollowMaster);
         }
 
+        public double getCurrentAbsolutePosition() {
+                // TODO: determine if this is correct
+                double absolutePosition = m_motorPrimary.getSensorCollection().getPulseWidthPosition();
+                SmartDashboard.putNumber("Absolute Position", absolutePosition);
+                return absolutePosition;
+        }
+
+        public double getCurrentRelativePosition() {
+                // TODO: determine if this is correct
+                double relativePosition = m_motorPrimary.getSelectedSensorPosition(PID_PRIMARY);
+                SmartDashboard.putNumber("Relative Position", relativePosition);
+                return relativePosition;
+        }
+
         /**
          * Rotates the motors to achive the desired position on the encoders.
          * TODO: determine if this should be called from a loop (like arcadeDrive)
@@ -109,6 +123,19 @@ public class PositionPidMotorController {
                 targetRotations = position;
                 SmartDashboard.putNumber("Goal", targetRotations);
                 m_motorPrimary.set(ControlMode.Position, targetRotations);
+        }
+
+        /**
+         * Rotates the motors at the specified speed.
+         * Used for manual control and testing, ignoring encoders.
+         * WARNING: be careful when switching back to goToPosition(), unless position
+         * has been zeroed.
+         *
+         * @param output the commanded motor output, between [-1, 1]
+         */
+        public void setOutput(double output) {
+                SmartDashboard.putNumber("Motor set output", output);
+                m_motorPrimary.set(ControlMode.PercentOutput, output);
         }
 
         /**
@@ -124,7 +151,7 @@ public class PositionPidMotorController {
 
         }
 
-        void zeroSensors() {
+        public void zeroSensors() {
                 /**
                  * Grab the 360 degree position of the MagEncoder's absolute
                  * position, and intitally set the relative sensor to match.
@@ -142,7 +169,7 @@ public class PositionPidMotorController {
                                 TIMEOUT_MS);
         }
 
-        void setPositionZero() {
+        public void setPositionZero() {
                 m_motorPrimary.getSensorCollection().setQuadraturePosition(0, TIMEOUT_MS);
                 System.out.println("[Quadrature Encoders] All sensors are zeroed.\n");
         }
