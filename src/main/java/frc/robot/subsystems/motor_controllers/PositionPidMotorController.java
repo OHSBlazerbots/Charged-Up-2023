@@ -13,8 +13,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 public class PositionPidMotorController {
         private static final int PID_PRIMARY = 0;
         private static final int TIMEOUT_MS = 30;
@@ -24,6 +22,7 @@ public class PositionPidMotorController {
         private final Gains _kGains;
         private double maxSpeed = 0.5;
         private double targetRotations = 0.0;
+        private double appliedOutput;
 
         public PositionPidMotorController(Gains gains, int primaryMotorPort) {
                 _kGains = gains;
@@ -102,14 +101,12 @@ public class PositionPidMotorController {
         public double getCurrentAbsolutePosition() {
                 // TODO: determine if this is correct
                 double absolutePosition = m_motorPrimary.getSensorCollection().getPulseWidthPosition();
-                SmartDashboard.putNumber("Absolute Position", absolutePosition);
                 return absolutePosition;
         }
 
         public double getCurrentRelativePosition() {
                 // TODO: determine if this is correct
                 double relativePosition = m_motorPrimary.getSelectedSensorPosition(PID_PRIMARY);
-                SmartDashboard.putNumber("Relative Position", relativePosition);
                 return relativePosition;
         }
 
@@ -121,8 +118,11 @@ public class PositionPidMotorController {
          */
         public void goToPosition(double position) {
                 targetRotations = position;
-                SmartDashboard.putNumber("Goal", targetRotations);
                 m_motorPrimary.set(ControlMode.Position, targetRotations);
+        }
+
+        public double getTargetPosition() {
+                return targetRotations;
         }
 
         /**
@@ -134,8 +134,12 @@ public class PositionPidMotorController {
          * @param output the commanded motor output, between [-1, 1]
          */
         public void setOutput(double output) {
-                SmartDashboard.putNumber("Motor set output", output);
+                appliedOutput = output;
                 m_motorPrimary.set(ControlMode.PercentOutput, output);
+        }
+
+        public double getOutput() {
+                return appliedOutput;
         }
 
         /**
