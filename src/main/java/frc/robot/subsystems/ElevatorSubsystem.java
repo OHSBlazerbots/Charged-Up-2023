@@ -15,13 +15,9 @@ public class ElevatorSubsystem extends SubsystemBase {
       m_elevController.zeroSensors();
    }
 
-   public void setElevatorPosition(double targetPosition) throws Exception {
-      // Validation that input position is valid
-      if (targetPosition < 0 || targetPosition > 1) {
-         throw new Exception("Position must be in range [0, 1]");
-      }
-
-      double motorPosition = targetPosition * ElevatorConstants.kElevEncoderRotationsAtMaxHeight;
+   public void setElevatorPosition(double targetPosition) {
+      double motorPosition = targetPosition
+            * ElevatorConstants.kElevEncoderRotationsAtMaxHeight;
       m_elevController.goToPosition(motorPosition);
       writeMetricsToSmartDashboard();
    }
@@ -44,4 +40,15 @@ public class ElevatorSubsystem extends SubsystemBase {
       // need to finish implementation, hook up hall effect sensors
    }
 
+   public void zeroSensors() {
+      m_elevController.zeroSensors();
+}
+
+   public void setPositionZero() {
+      m_elevController.setPositionZero();
+   }
+
+   public void setElevatorPosition() {
+      setElevatorPosition(10);
+   }
 }
