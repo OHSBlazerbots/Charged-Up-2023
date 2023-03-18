@@ -41,7 +41,7 @@ public final class Constants {
     public static final int kElevMotorPrimaryPort = 2;
     public static final int kElevMotorSecondaryPort = 3;
 
-    public static final Gains kElevGains = new Gains(1.5, 0.0, 4.0, 0.0, 200, 1.00);
+    public static final Gains kElevGains = new Gains(0.15, 0.0, 0.0, 0.0, 200, 1.00);
     public static final int kElevEncoderRotationsAtMaxHeight = 100; // TODO: determine emperically
   }
 
@@ -51,6 +51,10 @@ public final class Constants {
 
   public static final class ClawConstants {
     public static final int kClawMotorPort = 8; // 19 is a placeholder
+    public static final int kClawEncoderRotationsAtMaxExtension = 42000;
+    public static final int kClawCubePosition = 20000;
+    public static final int kClawConePosition = 3500;
+
   }
 
   public static final class LightingConstants {

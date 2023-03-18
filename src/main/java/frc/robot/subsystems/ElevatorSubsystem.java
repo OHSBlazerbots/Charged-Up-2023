@@ -15,8 +15,7 @@ public class ElevatorSubsystem extends SubsystemBase {
    }
 
    public void setElevatorPosition(double targetPosition) {
-      double motorPosition = targetPosition
-            * ElevatorConstants.kElevEncoderRotationsAtMaxHeight;
+      double motorPosition = targetPosition;
       m_elevController.goToPosition(motorPosition);
       writeMetricsToSmartDashboard();
    }

@@ -43,8 +43,8 @@ public class PositionPidMotorController {
                 m_motorPrimary.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, PID_PRIMARY, TIMEOUT_MS);
 
                 /* Configure output and sensor direction */
-                m_motorPrimary.setInverted(true);
-                m_motorPrimary.setSensorPhase(true);
+                m_motorPrimary.setInverted(false);
+                m_motorPrimary.setSensorPhase(false);
 
                 /* Config the peak and nominal outputs */
                 m_motorPrimary.configNominalOutputForward(0.0, TIMEOUT_MS);
