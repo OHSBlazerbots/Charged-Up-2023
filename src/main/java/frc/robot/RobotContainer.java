@@ -132,7 +132,7 @@ public class RobotContainer {
                                 .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
                 // This is for claw movement to manually close.
                 m_CoDriverController
-                                .button(2)
+                                .axisGreaterThan(IOConstants.kCoDriverAxisRightTrigger, 0)
                                 .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(-0.5)))
                                 .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
 

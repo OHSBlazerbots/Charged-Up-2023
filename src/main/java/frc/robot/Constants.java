@@ -69,11 +69,12 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final int kCoDriverControllerPort = 1;
 
-    // TODO: determine if this is 0-indexed or 1-indexed
-    public static final int kCoDriverButtonA = 0;
-    public static final int kCoDriverButtonB = 1;
-    public static final int kCoDriverButtonX = 2;
-    public static final int kCoDriverButtonY = 3;
-    public static final int kCoDriverButtonRightBumber = 5;
+    // Buttons are 1-indexed
+    public static final int kCoDriverButtonA = 1;
+    public static final int kCoDriverButtonB = 2;
+    public static final int kCoDriverButtonX = 3;
+    public static final int kCoDriverButtonY = 4;
+    public static final int kCoDriverButtonRightBumber = 6;
+    public static final int kCoDriverAxisRightTrigger = 3;
   }
 }
