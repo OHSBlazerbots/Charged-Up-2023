@@ -20,12 +20,14 @@ import frc.robot.commands.MoveElevatorCommand;
 
 public class RobotContainer {
         // The robot's subsystems
-        private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+        // private final DriveSubsystem m_robotDrive = new DriveSubsystem();
         private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
-        private final ArmSubsystem m_robotArm = new ArmSubsystem();
-        private final ClawSubsystem m_robotClaw = new ClawSubsystem();
-        private final Command m_SimpleAuto = new DriveStraightAutoCommand(m_robotDrive);
-        private final Command m_ComplexAuto = new DriveStraightAutoCommand(m_robotDrive);
+        // private final ArmSubsystem m_robotArm = new ArmSubsystem();
+        // private final ClawSubsystem m_robotClaw = new ClawSubsystem();
+        // private final Command m_SimpleAuto = new
+        // DriveStraightAutoCommand(m_robotDrive);
+        // private final Command m_ComplexAuto = new
+        // DriveStraightAutoCommand(m_robotDrive);
         private final Command m_NothingAuto = null;
         SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -38,21 +40,21 @@ public class RobotContainer {
                 configureBindings();
 
                 // Configure default commands
-                // Set the default drive command to split-stick arcade drive
-                m_robotDrive.setDefaultCommand(
-                                // A split-stick arcade command, with forward/backward controlled by the left
-                                // hand, and turning controlled by the right.
-                                Commands.run(
-                                                () -> m_robotDrive.arcadeDrive(
-                                                                -m_driverController.getLeftY(),
-                                                                -m_driverController.getLeftX()),
-                                                m_robotDrive));
-                // Add commands to the autonomous command chooser
-                m_chooser.setDefaultOption("Simple Auto", m_SimpleAuto);
-                // m_chooser.addOption("Complex Auto", m_ComplexAuto);
-                m_chooser.addOption("Nothing Auto", m_NothingAuto);
-                // Put the chooser on the dashboard
-                SmartDashboard.putData(m_chooser);
+                // // Set the default drive command to split-stick arcade drive
+                // m_robotDrive.setDefaultCommand(
+                // // A split-stick arcade command, with forward/backward controlled by the left
+                // // hand, and turning controlled by the right.
+                // Commands.run(
+                // () -> m_robotDrive.arcadeDrive(
+                // -m_driverController.getLeftY(),
+                // -m_driverController.getLeftX()),
+                // m_robotDrive));
+                // // Add commands to the autonomous command chooser
+                // m_chooser.setDefaultOption("Simple Auto", m_SimpleAuto);
+                // // m_chooser.addOption("Complex Auto", m_ComplexAuto);
+                // m_chooser.addOption("Nothing Auto", m_NothingAuto);
+                // // Put the chooser on the dashboard
+                // SmartDashboard.putData(m_chooser);
 
         }
 
@@ -61,14 +63,14 @@ public class RobotContainer {
          */
         private void configureBindings() {
                 // While holding the shoulder button, drive at half speed
-                m_driverController
-                                .rightBumper()
-                                .onTrue(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.8)));
+                // m_driverController
+                // .rightBumper()
+                // .onTrue(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.5)))
+                // .onFalse(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.8)));
 
-                m_driverController // This toggle drive modes
-                                .b()
-                                .onTrue(Commands.runOnce(() -> m_robotDrive.toggleDriveMode()));
+                // m_driverController // This toggle drive modes
+                // .b()
+                // .onTrue(Commands.runOnce(() -> m_robotDrive.toggleDriveMode()));
 
                 // This is for elevator up and down movement.
                 m_driverController // This moves elevator up
@@ -89,31 +91,31 @@ public class RobotContainer {
                 m_driverController // This moves elevator down
                                 .x()
                                 .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorPosition()));
-                m_CoDriverController
-                                .button(3)
-                                .onTrue(new MoveElevatorCommand(m_robotElevator));
+                // m_CoDriverController
+                // .button(3)
+                // .onTrue(new MoveElevatorCommand(m_robotElevator));
 
                 // This is for arm movement forward and backward.
-                m_driverController // This moves arm backwards
-                                .x()
-                                .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(-0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
+                // m_driverController // This moves arm backwards
+                // .x()
+                // .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(-0.5)))
+                // .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
 
-                m_driverController // This moves arm forwards
-                                .b()
-                                .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
+                // m_driverController // This moves arm forwards
+                // .b()
+                // .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(0.5)))
+                // .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
 
-                // This is for claw movement to open.
-                m_CoDriverController
-                                .button(3)
-                                .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
-                // This is for claw movement to close.
-                m_CoDriverController
-                                .button(2)
-                                .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(-0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
+                // // This is for claw movement to open.
+                // m_CoDriverController
+                // .button(3)
+                // .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0.5)))
+                // .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
+                // // This is for claw movement to close.
+                // m_CoDriverController
+                // .button(2)
+                // .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(-0.5)))
+                // .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
 
         }
 
