@@ -23,7 +23,7 @@ public class RobotContainer {
         // private final DriveSubsystem m_robotDrive = new DriveSubsystem();
         private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
         // private final ArmSubsystem m_robotArm = new ArmSubsystem();
-        // private final ClawSubsystem m_robotClaw = new ClawSubsystem();
+        private final ClawSubsystem m_robotClaw = new ClawSubsystem();
         // private final Command m_SimpleAuto = new
         // DriveStraightAutoCommand(m_robotDrive);
         // private final Command m_ComplexAuto = new
@@ -108,16 +108,33 @@ public class RobotContainer {
                 // .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(0.5)))
                 // .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
 
-                // // This is for claw movement to open.
-                // m_CoDriverController
-                // .button(3)
-                // .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0.5)))
-                // .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
-                // // This is for claw movement to close.
-                // m_CoDriverController
-                // .button(2)
-                // .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(-0.5)))
-                // .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
+                // Reset claw's encoder logic
+                m_CoDriverController
+                                .button(IOConstants.kCoDriverButtonB) // button B is red for reset
+                                // TODO: determine what reset function to call
+                                .onTrue(Commands.runOnce(() -> m_robotClaw.zeroSensors()));
+
+                // Moving claw to pre-set positions
+                m_CoDriverController
+                                .button(IOConstants.kCoDriverButtonY) // button Y is yellow, like cones
+                                .onTrue(Commands.runOnce(() -> m_robotClaw.goToConePosition()));
+                m_CoDriverController
+                                .button(IOConstants.kCoDriverButtonX) // button X is blue/purple, like cubes
+                                .onTrue(Commands.runOnce(() -> m_robotClaw.goToCubePosition()));
+                m_CoDriverController
+                                .button(IOConstants.kCoDriverButtonA) // button A is green for open
+                                .onTrue(Commands.runOnce(() -> m_robotClaw.goToMaxOpenPosition()));
+
+                // This is for claw movement to manually open.
+                m_CoDriverController
+                                .button(IOConstants.kCoDriverButtonRightBumber)
+                                .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0.5)))
+                                .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
+                // This is for claw movement to manually close.
+                m_CoDriverController
+                                .button(2)
+                                .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(-0.5)))
+                                .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
 
         }
 

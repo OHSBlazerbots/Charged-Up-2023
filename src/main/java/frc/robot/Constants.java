@@ -50,7 +50,8 @@ public final class Constants {
   }
 
   public static final class ClawConstants {
-    public static final int kClawMotorPort = 8; // 19 is a placeholder
+    public static final int kClawMotorPort = 8;
+    public static final Gains kClawGains = new Gains(0.15, 0.0, 0.0, 0.0, 200, 1.00);
     public static final int kClawEncoderRotationsAtMaxExtension = 42000;
     public static final int kClawCubePosition = 20000;
     public static final int kClawConePosition = 3500;
@@ -67,5 +68,12 @@ public final class Constants {
   public static final class IOConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kCoDriverControllerPort = 1;
+
+    // TODO: determine if this is 0-indexed or 1-indexed
+    public static final int kCoDriverButtonA = 0;
+    public static final int kCoDriverButtonB = 1;
+    public static final int kCoDriverButtonX = 2;
+    public static final int kCoDriverButtonY = 3;
+    public static final int kCoDriverButtonRightBumber = 5;
   }
 }
