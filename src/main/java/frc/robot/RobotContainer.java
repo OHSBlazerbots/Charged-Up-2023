@@ -44,7 +44,7 @@ public class RobotContainer {
                                 Commands.run(
                                                 () -> m_robotDrive.arcadeDrive(
                                                                 -m_driverController.getLeftY(),
-                                                                -m_driverController.getLeftX()),
+                                                                m_driverController.getLeftX()),
                                                 m_robotDrive));
                 // Add commands to the autonomous command chooser
                 m_chooser.setDefaultOption("Simple Auto", m_SimpleAuto);
@@ -59,11 +59,13 @@ public class RobotContainer {
          * Use this method to define your button->command mappings
          */
         private void configureBindings() {
-                // While holding the shoulder button, drive at half speed
+                // Use bumpers to change virtual "gears"
                 m_driverController
-                                .rightBumper()
-                                .onTrue(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotDrive.setMaxOutput(0.8)));
+                                .leftTrigger()
+                                .onTrue(Commands.runOnce(() -> m_robotDrive.decrementMaxSpeed()));
+                m_driverController
+                                .rightTrigger()
+                                .onTrue(Commands.runOnce(() -> m_robotDrive.incrementMaxSpeed()));
 
                 m_driverController // This toggle drive modes
                                 .b()
