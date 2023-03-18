@@ -20,14 +20,12 @@ import frc.robot.commands.MoveElevatorCommand;
 
 public class RobotContainer {
         // The robot's subsystems
-        // private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+        private final DriveSubsystem m_robotDrive = new DriveSubsystem();
         private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
-        // private final ArmSubsystem m_robotArm = new ArmSubsystem();
+        private final ArmSubsystem m_robotArm = new ArmSubsystem();
         private final ClawSubsystem m_robotClaw = new ClawSubsystem();
-        // private final Command m_SimpleAuto = new
-        // DriveStraightAutoCommand(m_robotDrive);
-        // private final Command m_ComplexAuto = new
-        // DriveStraightAutoCommand(m_robotDrive);
+        private final Command m_SimpleAuto = new DriveStraightAutoCommand(m_robotDrive);
+        private final Command m_ComplexAuto = new DriveStraightAutoCommand(m_robotDrive);
         private final Command m_NothingAuto = null;
         SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -70,9 +68,9 @@ public class RobotContainer {
                                 .rightTrigger()
                                 .onTrue(Commands.runOnce(() -> m_robotDrive.incrementMaxSpeed()));
 
-                // m_driverController // This toggle drive modes
-                // .b()
-                // .onTrue(Commands.runOnce(() -> m_robotDrive.toggleDriveMode()));
+                m_driverController // This toggle drive modes
+                                .b()
+                                .onTrue(Commands.runOnce(() -> m_robotDrive.toggleDriveMode()));
 
                 // This is for elevator up and down movement.
                 m_driverController // This moves elevator up
@@ -98,15 +96,15 @@ public class RobotContainer {
                 // .onTrue(new MoveElevatorCommand(m_robotElevator));
 
                 // This is for arm movement forward and backward.
-                // m_driverController // This moves arm backwards
-                // .x()
-                // .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(-0.5)))
-                // .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
+                m_driverController // This moves arm backwards
+                                .x()
+                                .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(-0.5)))
+                                .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
 
-                // m_driverController // This moves arm forwards
-                // .b()
-                // .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(0.5)))
-                // .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
+                m_driverController // This moves arm forwards
+                                .b()
+                                .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(0.5)))
+                                .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
 
                 // Reset claw's encoder logic
                 m_CoDriverController

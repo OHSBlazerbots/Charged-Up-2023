@@ -1,14 +1,15 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.subsystems.motor_controllers.PositionPidMotorController;
+import frc.robot.subsystems.motor_controllers.PositionPidDualMotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ElevatorSubsystem extends SubsystemBase {
-   private static final PositionPidMotorController m_elevController = new PositionPidMotorController(
+   private static final PositionPidDualMotorController m_elevController = new PositionPidDualMotorController(
          ElevatorConstants.kElevGains,
-         8);
+         ElevatorConstants.kElevMotorPrimaryPort,
+         ElevatorConstants.kElevMotorSecondaryPort);
 
    public ElevatorSubsystem() {
       m_elevController.zeroSensors();
