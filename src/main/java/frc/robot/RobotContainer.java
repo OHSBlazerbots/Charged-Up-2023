@@ -61,10 +61,10 @@ public class RobotContainer {
         private void configureBindings() {
                 // Use bumpers to change virtual "gears"
                 m_driverController
-                                .leftBumper()
+                                .leftTrigger()
                                 .onTrue(Commands.runOnce(() -> m_robotDrive.decrementMaxSpeed()));
                 m_driverController
-                                .rightBumper()
+                                .rightTrigger()
                                 .onTrue(Commands.runOnce(() -> m_robotDrive.incrementMaxSpeed()));
 
                 m_driverController // This toggle drive modes
