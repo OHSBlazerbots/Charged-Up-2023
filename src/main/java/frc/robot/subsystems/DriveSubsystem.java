@@ -29,7 +29,7 @@ public class DriveSubsystem extends SubsystemBase {
         // Virtual gears
         private static double kMaxSpeed = 0.3;
         private static final double SPEED_CHANGE_INTERVAL = 0.1;
-        private static final double MAX_SPEED_ALLOWED = 0.8;
+        private static final double MAX_SPEED_ALLOWED = 0.5;
         private static final double MIN_SPEED_ALLOWED = 0.1;
 
         private double _targetAngle = 0.0;
