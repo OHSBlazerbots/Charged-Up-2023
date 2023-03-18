@@ -74,7 +74,12 @@ public final class Constants {
     public static final int kCoDriverButtonB = 2;
     public static final int kCoDriverButtonX = 3;
     public static final int kCoDriverButtonY = 4;
+    public static final int kCoDriverButtonLeftBumber = 5;
     public static final int kCoDriverButtonRightBumber = 6;
+    public static final int kCoDriverButtonBack = 7;
+    public static final int kCoDriverButtonStart = 8;
+    public static final int kCoDriverButtonLeftJoystick = 9;
+    public static final int kCoDriverButtonRightJoystick = 10;
     public static final int kCoDriverAxisRightTrigger = 3;
   }
 }

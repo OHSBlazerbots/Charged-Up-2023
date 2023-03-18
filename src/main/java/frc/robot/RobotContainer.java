@@ -110,7 +110,9 @@ public class RobotContainer {
 
                 // Reset claw's encoder logic
                 m_CoDriverController
-                                .button(IOConstants.kCoDriverButtonB) // button B is red for reset
+                                // button start+B (red for reset)
+                                .button(IOConstants.kCoDriverButtonStart)
+                                .and(m_CoDriverController.button(IOConstants.kCoDriverButtonB))
                                 // TODO: determine what reset function to call
                                 .onTrue(Commands.runOnce(() -> m_robotClaw.zeroSensors()));
 
