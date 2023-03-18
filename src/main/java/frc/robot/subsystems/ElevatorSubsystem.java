@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ElevatorSubsystem extends SubsystemBase {
    private static final PositionPidMotorController m_elevController = new PositionPidMotorController(
          ElevatorConstants.kElevGains,
-         7);
+         8);
 
    public ElevatorSubsystem() {
       m_elevController.zeroSensors();
@@ -48,6 +48,7 @@ public class ElevatorSubsystem extends SubsystemBase {
    }
 
    public void setElevatorPosition() {
-      setElevatorPosition(10);
+      Double targetPosition = SmartDashboard.getNumber("Elevator Goal", 10);
+      setElevatorPosition(targetPosition);
    }
 }

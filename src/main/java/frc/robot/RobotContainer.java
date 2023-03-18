@@ -76,12 +76,12 @@ public class RobotContainer {
                 m_driverController // This moves elevator up
                                 .y()
                                 .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-0.1)));
+                                .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0)));
 
                 m_driverController // This moves elevator down
                                 .a()
                                 .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.2)));
+                                .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0)));
                 m_driverController // This moves elevator down
                                 .start()
                                 .onTrue(Commands.runOnce(() -> m_robotElevator.zeroSensors()));
