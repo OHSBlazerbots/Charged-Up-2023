@@ -49,8 +49,8 @@ public class PositionPidMotorController {
                 /* Config the peak and nominal outputs */
                 m_motorPrimary.configNominalOutputForward(0.0, TIMEOUT_MS);
                 m_motorPrimary.configNominalOutputReverse(0.0, TIMEOUT_MS);
-                m_motorPrimary.configPeakOutputForward(1.0, TIMEOUT_MS);
-                m_motorPrimary.configPeakOutputReverse(-1.0, TIMEOUT_MS);
+                m_motorPrimary.configPeakOutputForward(_kGains.kPeakOutput, TIMEOUT_MS);
+                m_motorPrimary.configPeakOutputReverse(-_kGains.kPeakOutput, TIMEOUT_MS);
 
                 /**
                  * Config the allowable closed-loop error, Closed-Loop output will be

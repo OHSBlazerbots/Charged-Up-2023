@@ -45,7 +45,7 @@ public final class Constants {
   public static final class WenchConstants {
     public static final int kWenchPrimaryMotorPort = 21;
     public static final int kWenchSecondaryMotorPort = 20;
-    public static final Gains kWenchGains = new Gains(0.15, 0.0, 0.0, 0.0, 200, 1.00);
+    public static final Gains kWenchGains = new Gains(0.15, 0.0, 0.0, 0.0, 200, 0.2);
 
   }
 
