@@ -19,10 +19,9 @@ package frc.robot;
 public final class Constants {
   public static final class DriveConstants {
     public static final int kLeftMotorPrimaryPort = 4;
-    public static final int kLeftMotorSecondaryPort = 18;
-    public static final int kRightMotorPrimaryPort = 17;
-    public static final int kRightMotorSecondaryPort = 7;
-
+    public static final int kLeftMotorSecondaryPort = 17;
+    public static final int kRightMotorPrimaryPort = 7;
+    public static final int kRightMotorSecondaryPort = 18;
     public static final int kTurnTravelUnitsPerRotation = 3600;
     public static final int kEncoderUnitsPerRotation = 51711; // number is added by experimentation
     public final static double kNeutralDeadband = 0.001;
@@ -37,16 +36,16 @@ public final class Constants {
   }
 
   public static final class ElevatorConstants {
-    // port numbers are placeholders
-    public static final int kElevMotorPrimaryPort = 2;
-    public static final int kElevMotorSecondaryPort = 3;
+    public static final int kElevMotorPort = 10;
 
     public static final Gains kElevGains = new Gains(0.15, 0.0, 0.0, 0.0, 200, 1.00);
     public static final int kElevEncoderRotationsAtMaxHeight = 100; // TODO: determine emperically
   }
 
-  public static final class ArmConstants {
-    public static final int kArmMotorPort = 5; // 5 is a placeholder
+  public static final class WenchConstants {
+    public static final int kWenchPrimaryMotorPort = 21;
+    public static final int kWenchSecondaryMotorPort = 20;
+
   }
 
   public static final class ClawConstants {
