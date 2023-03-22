@@ -17,6 +17,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.WenchSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.commands.MoveElevatorCommand;
+import frc.robot.subsystems.CameraSubsystem;
 
 public class RobotContainer {
         // The robot's subsystems
@@ -24,6 +25,7 @@ public class RobotContainer {
         private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
         private final WenchSubsystem m_robotWench = new WenchSubsystem();
         private final ClawSubsystem m_robotClaw = new ClawSubsystem();
+        private final CameraSubsystem m_robotCamera = new CameraSubsystem();
         private final Command m_SimpleAuto = new DriveStraightAutoCommand(m_robotDrive);
         private final Command m_ComplexAuto = new DriveStraightAutoCommand(m_robotDrive);
         private final Command m_NothingAuto = null;
@@ -69,19 +71,20 @@ public class RobotContainer {
                                 .onTrue(Commands.runOnce(() -> m_robotDrive.incrementMaxSpeed()));
 
                 m_driverController // This toggle drive modes
-                                .b()
+                                .rightBumper()
                                 .onTrue(Commands.runOnce(() -> m_robotDrive.toggleDriveMode()));
 
                 // This is for elevator up and down movement.
+                double elevHold = 0.10;
                 m_driverController // This moves elevator up
                                 .y()
                                 .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0)));
+                                .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-elevHold)));
 
                 m_driverController // This moves elevator down
                                 .a()
                                 .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0)));
+                                .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-elevHold)));
                 m_driverController // This moves elevator down
                                 .start()
                                 .onTrue(Commands.runOnce(() -> m_robotElevator.zeroSensors()));
@@ -94,17 +97,20 @@ public class RobotContainer {
                 // m_CoDriverController
                 // .button(3)
                 // .onTrue(new MoveElevatorCommand(m_robotElevator));
+                // m_driverController
+                // .a()
+                // .onTrue(Commands.runOnce(() -> m_robotCamera.toggleCameraSelection()));
 
-                // This is for arm movement forward and backward.
-                m_driverController // This moves arm backwards
-                                .x()
-                                .onTrue(Commands.runOnce(() -> m_robotWench.setArmSpeed(-0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotWench.setArmSpeed(0)));
-
-                m_driverController // This moves arm forwards
+                // This is for wench movement forward and backward.
+                m_driverController // This moves wench backwards
                                 .b()
-                                .onTrue(Commands.runOnce(() -> m_robotWench.setArmSpeed(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotWench.setArmSpeed(0)));
+                                .onTrue(Commands.runOnce(() -> m_robotWench.setWenchSpeed(-0.1)))
+                                .onFalse(Commands.runOnce(() -> m_robotWench.setWenchSpeed(0.1)));
+
+                m_driverController // This moves wench forwards
+                                .x()
+                                .onTrue(Commands.runOnce(() -> m_robotWench.setWenchSpeed(1)))
+                                .onFalse(Commands.runOnce(() -> m_robotWench.setWenchSpeed(0.1)));
 
                 // Reset claw's encoder logic
                 m_CoDriverController
@@ -144,7 +150,4 @@ public class RobotContainer {
 
         }
 
-        private void initCameras() {
-                CameraServer.startAutomaticCapture();
-        }
 }
