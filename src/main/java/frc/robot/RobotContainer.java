@@ -14,14 +14,15 @@ import frc.robot.Constants.IOConstants;
 import frc.robot.commands.DriveStraightAutoCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.WenchSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import edu.wpi.first.cameraserver.CameraServer;
 
 public class RobotContainer {
         // The robot's subsystems
         private final DriveSubsystem m_robotDrive = new DriveSubsystem();
         private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
-        private final ArmSubsystem m_robotArm = new ArmSubsystem();
+        private final WenchSubsystem m_robotWench = new WenchSubsystem();
         private final ClawSubsystem m_robotClaw = new ClawSubsystem();
         private final Command m_SimpleAuto = new DriveStraightAutoCommand(m_robotDrive);
         private final Command m_ComplexAuto = new DriveStraightAutoCommand(m_robotDrive);
@@ -85,13 +86,13 @@ public class RobotContainer {
                 // This is for arm movement forward and backward.
                 m_driverController // This moves arm backwards
                                 .x()
-                                .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(-0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
+                                .onTrue(Commands.runOnce(() -> m_robotWench.setArmSpeed(-0.5)))
+                                .onFalse(Commands.runOnce(() -> m_robotWench.setArmSpeed(0)));
 
                 m_driverController // This moves arm forwards
                                 .b()
-                                .onTrue(Commands.runOnce(() -> m_robotArm.setArmSpeed(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotArm.setArmSpeed(0)));
+                                .onTrue(Commands.runOnce(() -> m_robotWench.setArmSpeed(0.5)))
+                                .onFalse(Commands.runOnce(() -> m_robotWench.setArmSpeed(0)));
 
                 // This is for claw movement to open.
                 m_CoDriverController
@@ -110,5 +111,9 @@ public class RobotContainer {
                 // Drives forward at specific speed at a specific time
                 return m_chooser.getSelected();
 
+        }
+
+        private void initCameras() {
+                CameraServer.startAutomaticCapture();
         }
 }
