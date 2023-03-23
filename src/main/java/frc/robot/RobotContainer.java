@@ -34,7 +34,7 @@ public class RobotContainer {
         // The driver's controller
         CommandXboxController m_driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
 
-        CommandGenericHID m_CoDriverController = new CommandGenericHID(IOConstants.kCoDriverControllerPort);
+        CommandXboxController m_CoDriverController = new CommandXboxController(IOConstants.kCoDriverControllerPort);
 
         public RobotContainer() {
                 configureBindings();
@@ -76,71 +76,93 @@ public class RobotContainer {
 
                 // This is for elevator up and down movement.
                 double elevHold = 0.10;
-                m_driverController // This moves elevator up
+                m_CoDriverController // This moves elevator up
                                 .y()
-                                .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-0.5)))
+                                .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-0.6)))
                                 .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-elevHold)));
 
-                m_driverController // This moves elevator down
+                m_CoDriverController // This moves elevator down
                                 .a()
+                                // .povDown()
                                 .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(0.5)))
                                 .onFalse(Commands.runOnce(() -> m_robotElevator.setElevatorSpeed(-elevHold)));
-                m_driverController // This moves elevator down
-                                .start()
-                                .onTrue(Commands.runOnce(() -> m_robotElevator.zeroSensors()));
-                m_driverController // This moves elevator down
-                                .back()
-                                .onTrue(Commands.runOnce(() -> m_robotElevator.setPositionZero()));
-                m_driverController // This moves elevator down
-                                .x()
-                                .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorPosition()));
                 // m_CoDriverController
+                // .povUp()
+                // .onTrue(Commands.runOnce(() -> m_robotElevator.setSafeWenchPosition()));
+                // Elevator PID
+                // m_driverController // Reset? elevator
+                // .start()
+                // .onTrue(Commands.runOnce(() -> m_robotElevator.zeroSensors()));
+                // m_driverController // Reset? elevator
+                // .back()
+                // .onTrue(Commands.runOnce(() -> m_robotElevator.setPositionZero()));
+                // m_driverController // Moves elevator to set position
+                // .x()
+                // .onTrue(Commands.runOnce(() -> m_robotElevator.setElevatorPosition()));
+                // // m_CoDriverController
                 // .button(3)
                 // .onTrue(new MoveElevatorCommand(m_robotElevator));
-                // m_driverController
-                // .a()
-                // .onTrue(Commands.runOnce(() -> m_robotCamera.toggleCameraSelection()));
 
                 // This is for wench movement forward and backward.
-                m_driverController // This moves wench backwards
+                double winchHold = 0.08;
+                m_CoDriverController // This moves wench backwards
                                 .b()
                                 .onTrue(Commands.runOnce(() -> m_robotWench.setWenchSpeed(-0.1)))
-                                .onFalse(Commands.runOnce(() -> m_robotWench.setWenchSpeed(0.1)));
+                                .onFalse(Commands.runOnce(() -> m_robotWench.setWenchSpeed(winchHold)));
 
-                m_driverController // This moves wench forwards
+                m_CoDriverController // This moves wench forwards
                                 .x()
                                 .onTrue(Commands.runOnce(() -> m_robotWench.setWenchSpeed(1)))
-                                .onFalse(Commands.runOnce(() -> m_robotWench.setWenchSpeed(0.1)));
+                                .onFalse(Commands.runOnce(() -> m_robotWench.setWenchSpeed(winchHold)));
+                // m_driverController // This moves wench backwards
+                // .b()
+                // .onTrue(Commands.runOnce(() -> m_robotWench.setWenchSpeed(-0.1)))
+                // .onFalse(Commands.runOnce(() -> m_robotWench.setWenchSpeed(0.1)));
+
+                // m_driverController // This moves wench forwards
+                // .x()
+                // .onTrue(Commands.runOnce(() -> m_robotWench.setWenchSpeed(1)))
+                // .onFalse(Commands.runOnce(() -> m_robotWench.setWenchSpeed(0.1)));
 
                 // Reset claw's encoder logic
-                m_CoDriverController
+                m_driverController
                                 // button start+B (red for reset)
-                                .button(IOConstants.kCoDriverButtonStart)
-                                .and(m_CoDriverController.button(IOConstants.kCoDriverButtonB))
+                                .back()
+                                .and(m_driverController.b())
                                 // TODO: determine what reset function to call
                                 .onTrue(Commands.runOnce(() -> m_robotClaw.zeroSensors()));
 
                 // Moving claw to pre-set positions
-                m_CoDriverController
-                                .button(IOConstants.kCoDriverButtonY) // button Y is yellow, like cones
+                m_driverController
+                                .y() // button Y is yellow, like cones
                                 .onTrue(Commands.runOnce(() -> m_robotClaw.goToConePosition()));
-                m_CoDriverController
-                                .button(IOConstants.kCoDriverButtonX) // button X is blue/purple, like cubes
+                m_driverController
+                                .x() // button X is blue/purple, like cubes
                                 .onTrue(Commands.runOnce(() -> m_robotClaw.goToCubePosition()));
-                m_CoDriverController
-                                .button(IOConstants.kCoDriverButtonA) // button A is green for open
+                m_driverController
+                                .a() // button A is green for open
                                 .onTrue(Commands.runOnce(() -> m_robotClaw.goToMaxOpenPosition()));
+                m_driverController
+                                .start()
+                                .onTrue(Commands.runOnce(() -> m_robotCamera.nextCameraSelection()));
 
-                // This is for claw movement to manually open.
-                m_CoDriverController
-                                .button(IOConstants.kCoDriverButtonRightBumber)
-                                .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
-                // This is for claw movement to manually close.
-                m_CoDriverController
-                                .axisGreaterThan(IOConstants.kCoDriverAxisRightTrigger, 0)
-                                .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(-0.5)))
-                                .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
+                // // This is for claw movement to manually open.
+                // m_driverController
+                // .rightStick()
+                // .onTrue(Commands.runOnce(
+                // () -> m_robotClaw.setClawSpeed(0.5 * m_driverController.getRightX())))
+                // .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
+
+                // // This is for claw movement to manually open.
+                // m_CoDriverController
+                // .button(IOConstants.kCoDriverButtonRightBumber)
+                // .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0.5)))
+                // .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
+                // // This is for claw movement to manually close.
+                // m_CoDriverController
+                // .axisGreaterThan(IOConstants.kCoDriverAxisRightTrigger, 0)
+                // .onTrue(Commands.runOnce(() -> m_robotClaw.setClawSpeed(-0.5)))
+                // .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
 
         }
 
