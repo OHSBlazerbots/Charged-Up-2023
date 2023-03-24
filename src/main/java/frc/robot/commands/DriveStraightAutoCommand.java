@@ -12,9 +12,11 @@ public class DriveStraightAutoCommand extends CommandBase {
      */
     DriveSubsystem driveSubsystem;
     Timer timer;
+    double duration;
 
-    public DriveStraightAutoCommand(DriveSubsystem subsystem) {
+    public DriveStraightAutoCommand(DriveSubsystem subsystem, double time) {
         // Use addRequirements() here to declare subsystem dependencies.
+        duration = time;
         driveSubsystem = subsystem;
         addRequirements(driveSubsystem);
         timer = new Timer();
@@ -31,7 +33,7 @@ public class DriveStraightAutoCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        driveSubsystem.arcadeDrive(.5, 0);// drive straight at half
+        driveSubsystem.arcadeDrive(AutoConstants.kDriveSpeed, 0);// drive straight at half
     }
 
     // Called once the command ends or is interrupted.
@@ -43,7 +45,7 @@ public class DriveStraightAutoCommand extends CommandBase {
     @Override
     public boolean isFinished() {
         // end the command if we have run for a specific amount of time
-        return timer.get() > AutoConstants.kDriveTimeSeconds;
+        return timer.get() > duration;
 
     }
 }

@@ -63,7 +63,10 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final double kDriveTimeSeconds = 7;
+    public static final double kShortDriveTimeSeconds = 2.5;
+    public static final double kLongDriveTimeSeconds = 7;
+    public static final double kDriveSpeed = 0.6;
+
   }
 
   public static final class IOConstants {

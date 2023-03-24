@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IOConstants;
 import frc.robot.commands.DriveStraightAutoCommand;
 import frc.robot.commands.DriveStraightAndBalanceAutoCommand;
@@ -27,9 +28,13 @@ public class RobotContainer {
         private final WenchSubsystem m_robotWench = new WenchSubsystem();
         private final ClawSubsystem m_robotClaw = new ClawSubsystem();
         private final CameraSubsystem m_robotCamera = new CameraSubsystem();
-        private final Command m_SimpleAuto = new DriveStraightAutoCommand(m_robotDrive);
+        private final Command m_SimpleShortAuto = new DriveStraightAutoCommand(m_robotDrive,
+                        AutoConstants.kShortDriveTimeSeconds);
+        private final Command m_SimpleLongAuto = new DriveStraightAutoCommand(m_robotDrive,
+                        AutoConstants.kLongDriveTimeSeconds);
         private final Command m_ComplexAuto = new DriveStraightAndBalanceAutoCommand(m_robotDrive);
         private final Command m_NothingAuto = null;
+
         SendableChooser<Command> m_chooser = new SendableChooser<>();
 
         // The driver's controller
@@ -51,9 +56,11 @@ public class RobotContainer {
                                                                 m_driverController.getLeftX()),
                                                 m_robotDrive));
                 // Add commands to the autonomous command chooser
-                m_chooser.setDefaultOption("Drive Straight Auto", m_SimpleAuto);
+
                 m_chooser.addOption("Balance on charging station Auto", m_ComplexAuto);
                 m_chooser.addOption("Nothing Auto", m_NothingAuto);
+                m_chooser.addOption("Drive straight Long Auto(7 seconds)", m_SimpleLongAuto);
+                m_chooser.addOption("Drive straight Short Auto(2.5 Seconds)", m_SimpleShortAuto);
                 // Put the chooser on the dashboard
                 SmartDashboard.putData(m_chooser);
 
@@ -148,11 +155,17 @@ public class RobotContainer {
                                 .onTrue(Commands.runOnce(() -> m_robotCamera.nextCameraSelection()));
 
                 // // This is for claw movement to manually open.
-                // m_driverController
-                // .rightStick()
-                // .onTrue(Commands.runOnce(
-                // () -> m_robotClaw.setClawSpeed(0.5 * m_driverController.getRightX())))
-                // .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
+                double manualClawSpeed = 0.5;
+                m_driverController
+                                .povLeft()
+                                .onTrue(Commands.runOnce(
+                                                () -> m_robotClaw.setClawSpeed(manualClawSpeed)))
+                                .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
+                m_driverController
+                                .povRight()
+                                .onTrue(Commands.runOnce(
+                                                () -> m_robotClaw.setClawSpeed(-manualClawSpeed)))
+                                .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
 
                 // // This is for claw movement to manually open.
                 // m_CoDriverController
