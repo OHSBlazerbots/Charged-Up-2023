@@ -39,7 +39,8 @@ public final class Constants {
     public static final int kElevMotorPort = 10;
 
     public static final Gains kElevGains = new Gains(0.15, 0.0, 0.0, 0.0, 200, 1.00);
-    public static final int kElevEncoderRotationsAtMaxHeight = 100; // TODO: determine emperically
+    public static final int kElevEncoderRotationsAtMaxHeight = -2004016; // TODO: determine emperically
+    public static final int elevatorSafeWenchPosition = -332606;
   }
 
   public static final class WenchConstants {

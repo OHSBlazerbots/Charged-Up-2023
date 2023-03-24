@@ -30,7 +30,7 @@ public class DriveStraightAutoCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        driveSubsystem.arcadeDrive(-.5, 0);// drive straight at half
+        driveSubsystem.arcadeDrive(.5, 0);// drive straight at half
     }
 
     // Called once the command ends or is interrupted.

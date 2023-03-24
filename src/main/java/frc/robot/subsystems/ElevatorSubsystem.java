@@ -20,7 +20,18 @@ public class ElevatorSubsystem extends SubsystemBase {
       writeMetricsToSmartDashboard();
    }
 
+   public void setSafeWenchPosition() {
+      setElevatorPosition(ElevatorConstants.elevatorSafeWenchPosition);
+   }
+
    public void setElevatorSpeed(double speed) {
+      // TODO: test this logic!!!
+      // stops elavator when it reaches the relative max height to prevent breakage
+      // if (m_elevController.getCurrentAbsolutePosition() >=
+      // ElevatorConstants.kElevEncoderRotationsAtMaxHeight
+      // && speed < 0) {
+      // return;
+      // }
       m_elevController.setOutput(speed);
       writeMetricsToSmartDashboard();
    }

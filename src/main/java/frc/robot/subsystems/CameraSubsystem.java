@@ -11,19 +11,20 @@ public class CameraSubsystem extends SubsystemBase {
     UsbCamera frontClaw;
     NetworkTableEntry cameraSelection;
     int currentCameraIndex = 0;
-    UsbCamera[] allCameras = { frontBumper, frontClaw };
+    UsbCamera[] allCameras;
 
     public CameraSubsystem() {
         frontBumper = CameraServer.startAutomaticCapture(0); // 0 is placeholder
         frontClaw = CameraServer.startAutomaticCapture(1); // 1 is placeholder
         cameraSelection = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
+        allCameras = new UsbCamera[] { frontBumper, frontClaw };
     }
 
-    public void toggleCameraSelection() {
+    public void nextCameraSelection() {
         System.out.println("part a:" + currentCameraIndex);
         currentCameraIndex += 1;
         System.out.println("part b:" + currentCameraIndex);
-        currentCameraIndex = currentCameraIndex % 2;
+        currentCameraIndex = currentCameraIndex % allCameras.length;
         System.out.println("currently:" + currentCameraIndex);
 
         UsbCamera currentCamera = allCameras[currentCameraIndex];
