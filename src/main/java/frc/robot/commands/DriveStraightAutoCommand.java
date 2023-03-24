@@ -23,6 +23,7 @@ public class DriveStraightAutoCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        driveSubsystem.setDriveStraight();
         timer.reset();
         timer.start();
     }

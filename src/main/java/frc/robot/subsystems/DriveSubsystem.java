@@ -61,6 +61,12 @@ public class DriveSubsystem extends SubsystemBase {
                 }
         }
 
+        public void setDriveStraight() {
+                if (!_isDriveStraightMode) {
+                        toggleDriveMode();
+                }
+        }
+
         public DriveSubsystem() {
                 // Reset each talon to factory default
                 // If we have to swap talons, we want to make sure
