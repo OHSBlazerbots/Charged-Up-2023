@@ -1,0 +1,7 @@
+- battery voltage
+
+- claw compressed
+- elevator retracted
+- winch retracted
+
+- robot backside facing driver station (TODO: confirm)
