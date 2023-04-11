@@ -83,6 +83,10 @@ public class PositionPidMotorController {
                 zeroSensors();
         }
 
+        public WPI_TalonSRX getMotor() {
+                return this.m_motorPrimary;
+        }
+
         /**
          * Set secondary motor to follow the signal of the primary motor.
          * Used for high-power configurations where mulitple motors drive a single

@@ -20,6 +20,7 @@ import frc.robot.subsystems.WenchSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.commands.MoveElevatorCommand;
 import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.commands.DriveStraightFullSpeedAutoCommand;
 
 public class RobotContainer {
         // The robot's subsystems
@@ -34,6 +35,7 @@ public class RobotContainer {
                         AutoConstants.kLongDriveTimeSeconds);
         private final Command m_ComplexAuto = new DriveStraightAndBalanceAutoCommand(m_robotDrive);
         private final Command m_NothingAuto = null;
+        private final Command m_DriveStraightFullSpeedAutoCommand = new DriveStraightFullSpeedAutoCommand(m_robotDrive);
 
         SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -61,6 +63,7 @@ public class RobotContainer {
                 m_chooser.addOption("Nothing Auto", m_NothingAuto);
                 m_chooser.addOption("Drive straight Long Auto(7 seconds)", m_SimpleLongAuto);
                 m_chooser.addOption("Drive straight Short Auto(2.5 Seconds)", m_SimpleShortAuto);
+                m_chooser.addOption("Drive straight full speed", m_DriveStraightFullSpeedAutoCommand);
                 // Put the chooser on the dashboard
                 SmartDashboard.putData(m_chooser);
 

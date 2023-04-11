@@ -14,6 +14,12 @@ public class ClawSubsystem extends SubsystemBase {
         // TODO: determine if both calls are needed
         zeroSensors();
         setPositionZero();
+
+        // Current limiting
+        int TIMEOUT_MS = 10;
+        m_clawController.getMotor().configPeakCurrentLimit(20, TIMEOUT_MS); // 20 Amps
+        m_clawController.getMotor().configPeakCurrentDuration(200, TIMEOUT_MS); // 200ms
+        m_clawController.getMotor().configContinuousCurrentLimit(20, TIMEOUT_MS); // 20 Amps
     }
 
     public void zeroSensors() {
