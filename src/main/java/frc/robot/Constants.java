@@ -19,9 +19,9 @@ package frc.robot;
 public final class Constants {
   public static final class DriveConstants {
     public static final int kLeftMotorPrimaryPort = 4;
-    public static final int kLeftMotorSecondaryPort = 18;
-    public static final int kRightMotorPrimaryPort = 17;
-    public static final int kRightMotorSecondaryPort = 7;
+    public static final int kLeftMotorSecondaryPort = 17;
+    public static final int kRightMotorPrimaryPort = 7;
+    public static final int kRightMotorSecondaryPort = 18;
     public static final int kTurnTravelUnitsPerRotation = 3600;
     public static final int kEncoderUnitsPerRotation = 51711; // number is added by experimentation
     public final static double kNeutralDeadband = 0.001;
@@ -36,26 +36,54 @@ public final class Constants {
   }
 
   public static final class ElevatorConstants {
-    public static final int kElevMotorPort = 3; // 25 is a placeholder
+    public static final int kElevMotorPort = 10;
+
+    public static final Gains kElevGains = new Gains(0.15, 0.0, 0.0, 0.0, 200, 1.00);
+    public static final int kElevEncoderRotationsAtMaxHeight = -2004016; // TODO: determine emperically
+    public static final int elevatorSafeWenchPosition = -332606;
   }
 
-  public static final class ArmConstants {
-    public static final int kArmMotorPort = 5; // 5 is a placeholder
+  public static final class WenchConstants {
+    public static final int kWenchPrimaryMotorPort = 21;
+    public static final int kWenchSecondaryMotorPort = 20;
+    public static final Gains kWenchGains = new Gains(0.15, 0.0, 0.0, 0.0, 200, 0.2);
+
   }
 
   public static final class ClawConstants {
-    public static final int kClawMotorPort = 8; // 19 is a placeholder
+    public static final int kClawMotorPort = 8;
+    public static final Gains kClawGains = new Gains(0.15, 0.0, 0.0, 0.0, 200, 1.00);
+    public static final int kClawEncoderRotationsAtMaxExtension = 42000;
+    public static final int kClawCubePosition = 20000;
+    public static final int kClawConePosition = 3500;
+
   }
 
   public static final class LightingConstants {
   }
 
   public static final class AutoConstants {
-    public static final double kDriveTimeSeconds = 2;
+    public static final double kShortDriveTimeSeconds = 2.5;
+    public static final double kLongDriveTimeSeconds = 7;
+    public static final double kDriveSpeed = 0.6;
+
   }
 
   public static final class IOConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kCoDriverControllerPort = 1;
+
+    // Buttons are 1-indexed
+    public static final int kCoDriverButtonA = 1;
+    public static final int kCoDriverButtonB = 2;
+    public static final int kCoDriverButtonX = 3;
+    public static final int kCoDriverButtonY = 4;
+    public static final int kCoDriverButtonLeftBumber = 5;
+    public static final int kCoDriverButtonRightBumber = 6;
+    public static final int kCoDriverButtonBack = 7;
+    public static final int kCoDriverButtonStart = 8;
+    public static final int kCoDriverButtonLeftJoystick = 9;
+    public static final int kCoDriverButtonRightJoystick = 10;
+    public static final int kCoDriverAxisRightTrigger = 3;
   }
 }
