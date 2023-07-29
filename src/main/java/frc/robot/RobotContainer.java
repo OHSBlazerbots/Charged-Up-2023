@@ -124,10 +124,20 @@ public class RobotContainer {
                 // .b()
                 // .onTrue(Commands.runOnce(() -> m_robotWench.setWenchSpeed(-0.1)))
                 // .onFalse(Commands.runOnce(() -> m_robotWench.setWenchSpeed(winchHold)));
-                m_driverController // This moves wench backwards
+                m_driverController // Moves soleniod to the forward positon
                                 .b()
-                                .onTrue(Commands.runOnce(() -> m_robotPneumatics.startCompressor(0.1)))
-                                .onFalse(Commands.runOnce(() -> m_robotPneumatics.stopCompressor()));
+                                .onTrue(Commands.runOnce(() -> m_robotPneumatics.forward()));
+
+                m_driverController // Moves solenoid to the backwards position
+                                .x()
+                                .onTrue(Commands.runOnce(() -> m_robotPneumatics.backward()));
+
+                m_driverController // Closes the solenoid
+                                .y()
+                                .onTrue(Commands.runOnce(() -> m_robotPneumatics.off()));
+                m_driverController // Turns off the compressor
+                                .a()
+                                .onTrue(Commands.runOnce(() -> m_robotPneumatics.toggleCompressor()));
 
                 // m_CoDriverController // This moves wench forwards
                 // .x()
