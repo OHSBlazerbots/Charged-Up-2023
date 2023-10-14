@@ -16,6 +16,7 @@ import frc.robot.commands.DriveStraightAutoCommand;
 import frc.robot.commands.DriveStraightAndBalanceAutoCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.UpperWenchSubsystem;
 import frc.robot.subsystems.WenchSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.commands.MoveElevatorCommand;
@@ -170,6 +171,17 @@ public class RobotContainer {
                                 .onTrue(Commands.runOnce(
                                                 () -> m_robotClaw.setClawSpeed(-manualClawSpeed)))
                                 .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
+
+                m_CoDriverController
+                                .povLeft()
+                                .onTrue(Commands.runOnce(
+                                                () -> m_upperWench.setUpperWenchSpeed(0.1)))
+                                .onFalse(Commands.runOnce(() -> m_upperWench.setUpperWenchSpeed(0)));
+                m_CoDriverController
+                                .povRight()
+                                .onTrue(Commands.runOnce(
+                                                () -> m_upperWench.setUpperWenchSpeed(-0.1)))
+                                .onFalse(Commands.runOnce(() -> m_upperWench.setUpperWenchSpeed(0)));
 
                 // // This is for claw movement to manually open.
                 // m_CoDriverController
