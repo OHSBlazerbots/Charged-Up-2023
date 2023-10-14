@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants.UpperWenchConstants;
-import frc.robot.subsystems.motor_controllers.PositionPidMotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
@@ -43,28 +42,28 @@ private CANSparkMax m_leadMotor = new CANSparkMax(UpperWenchConstants.kUpperMoto
    }
 
    public void writeMetricsToSmartDashboard() {
-      SmartDashboard.putNumber("UpperWench Relative Position", m_upperController.getCurrentRelativePosition());
-      SmartDashboard.putNumber("UpperWench Absolute Position", m_upperController.getCurrentAbsolutePosition());
-      SmartDashboard.putNumber("UpperWench Goal", m_upperController.getTargetPosition());
-      SmartDashboard.putNumber("Evelvator Motor set output", m_upperController.getOutput());
+      // SmartDashboard.putNumber("UpperWench Relative Position", m_upperController.getCurrentRelativePosition());
+      // SmartDashboard.putNumber("UpperWench Absolute Position", m_upperController.getCurrentAbsolutePosition());
+      // SmartDashboard.putNumber("UpperWench Goal", m_upperController.getTargetPosition());
+      SmartDashboard.putNumber("UpperWench Motor set output", m_leadMotor.get());
    }
 
-   public boolean isAtpositionA() {
+//    public boolean isAtpositionA() {
 
-      return true;
-      // need to finish implementation, hook up hall effect sensors
-   }
+//       return true;
+//       // need to finish implementation, hook up hall effect sensors
+//    }
 
-   public void zeroSensors() {
-      m_upperController.zeroSensors();
-   }
+//    public void zeroSensors() {
+//       m_upperControfller.zeroSensors();
+//    }
 
-   public void setPositionZero() {
-      m_upperController.setPositionZero();
-   }
+//    public void setPositionZero() {
+//       m_upperController.setPositionZero();
+//    }
 
-   public void setUpperWenchPosition() {
-      Double targetPosition = SmartDashboard.getNumber("UpperWench Goal", 10);
-      setUpperWenchPosition(targetPosition);
-   }
+//    public void setUpperWenchPosition() {
+//       Double targetPosition = SmartDashboard.getNumber("UpperWench Goal", 10);
+//       setUpperWenchPosition(targetPosition);
+//    }
 }
