@@ -26,6 +26,7 @@ public class RobotContainer {
         // The robot's subsystems
         private final DriveSubsystem m_robotDrive = new DriveSubsystem();
         private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
+        private final UpperWenchSubsystem m_upperWench = new UpperWenchSubsystem();
         private final WenchSubsystem m_robotWench = new WenchSubsystem();
         private final ClawSubsystem m_robotClaw = new ClawSubsystem();
         private final CameraSubsystem m_robotCamera = new CameraSubsystem();

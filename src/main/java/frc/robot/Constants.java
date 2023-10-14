@@ -43,6 +43,14 @@ public final class Constants {
     public static final int elevatorSafeWenchPosition = -332606;
   }
 
+  public static final class UpperWenchConstants {
+    public static final int kUpperMotorPort = 10;
+
+    public static final Gains kUpperGains = new Gains(0.15, 0.0, 0.0, 0.0, 200, 1.00);
+    public static final int kUpeprEncoderRotationsAtMaxHeight = -2004016; // TODO: determine emperically
+    public static final int UpperWenchSafeWenchPosition = -332606;
+  }
+
   public static final class WenchConstants {
     public static final int kWenchPrimaryMotorPort = 21;
     public static final int kWenchSecondaryMotorPort = 20;
