@@ -14,6 +14,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IOConstants;
 import frc.robot.commands.DriveStraightAutoCommand;
 import frc.robot.commands.DriveStraightAndBalanceAutoCommand;
+import frc.robot.commands.DriveStraightAndIntake;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.UpperWenchSubsystem;
@@ -35,6 +36,8 @@ public class RobotContainer {
                         AutoConstants.kShortDriveTimeSeconds);
         private final Command m_SimpleLongAuto = new DriveStraightAutoCommand(m_robotDrive,
                         AutoConstants.kLongDriveTimeSeconds);
+        private final Command m_DriveStraightAndIntake = new DriveStraightAndIntake(m_robotDrive,
+                        m_upperWench, 1);
         private final Command m_ComplexAuto = new DriveStraightAndBalanceAutoCommand(m_robotDrive);
         private final Command m_NothingAuto = null;
         private final Command m_DriveStraightFullSpeedAutoCommand = new DriveStraightFullSpeedAutoCommand(m_robotDrive);
@@ -65,9 +68,11 @@ public class RobotContainer {
                 m_chooser.addOption("Nothing Auto", m_NothingAuto);
                 m_chooser.addOption("Drive straight Long Auto(7 seconds)", m_SimpleLongAuto);
                 m_chooser.addOption("Drive straight Short Auto(2.5 Seconds)", m_SimpleShortAuto);
+                m_chooser.addOption("Shoot cube auto for 1 second", m_DriveStraightAndIntake);
                 m_chooser.addOption("Drive straight full speed", m_DriveStraightFullSpeedAutoCommand);
                 // Put the chooser on the dashboard
                 SmartDashboard.putData(m_chooser);
+                
 
         }
 
