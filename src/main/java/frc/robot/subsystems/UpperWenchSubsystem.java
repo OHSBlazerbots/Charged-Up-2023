@@ -4,25 +4,31 @@ import frc.robot.Constants.UpperWenchConstants;
 import frc.robot.subsystems.motor_controllers.PositionPidMotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 
 public class UpperWenchSubsystem extends SubsystemBase {
-   private static final PositionPidMotorController m_upperController = new PositionPidMotorController(
-         UpperWenchConstants.kElevGains,
-         UpperWenchConstants.kElevMotorPort);
+//    private static final PositionPidMotorController m_upperController = new PositionPidMotorController(
+//          UpperWenchConstants.kElevGains,
+//          UpperWenchConstants.kElevMotorPort);
+private CANSparkMax m_leadMotor = new CANSparkMax(UpperWenchConstants.kUpperMotorPort, MotorType.kBrushless);
+ 
 
    public UpperWenchSubsystem() {
-      m_upperController.zeroSensors();
+      // m_upperController.zeroSensors();
+      m_leadMotor.restoreFactoryDefaults();
    }
 
-   public void setUpperWenchPosition(double targetPosition) {
-      double motorPosition = targetPosition;
-      m_upperController.goToPosition(motorPosition);
-      writeMetricsToSmartDashboard();
-   }
+   // public void setUpperWenchPosition(double targetPosition) {
+   //    double motorPosition = targetPosition;
+   //    m_upperController.goToPosition(motorPosition);
+   //    writeMetricsToSmartDashboard();
+   // }
 
-   public void setSafeWenchPosition() {
-      setUpperWenchPosition(UpperWenchConstants.upperatorSafeWenchPosition);
-   }
+   // public void setSafeWenchPosition() {
+   //    setUpperWenchPosition(UpperWenchConstants.upperatorSafeWenchPosition);
+   // }
 
    public void setUpperWenchSpeed(double speed) {
       // TODO: test this logic!!!
@@ -32,7 +38,7 @@ public class UpperWenchSubsystem extends SubsystemBase {
       // && speed < 0) {
       // return;
       // }
-      m_upperController.setOutput(speed);
+      m_leadMotor.set(speed);
       writeMetricsToSmartDashboard();
    }
 
