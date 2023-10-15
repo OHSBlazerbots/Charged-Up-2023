@@ -44,7 +44,7 @@ public final class Constants {
   }
 
   public static final class UpperWenchConstants {
-    public static final int kUpperMotorPort = 10;
+    public static final int kUpperMotorPort = 29;
 
     public static final Gains kUpperGains = new Gains(0.15, 0.0, 0.0, 0.0, 200, 1.00);
     public static final int kUpeprEncoderRotationsAtMaxHeight = -2004016; // TODO: determine emperically
