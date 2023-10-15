@@ -121,7 +121,7 @@ public class RobotContainer {
                 // .onTrue(new MoveElevatorCommand(m_robotElevator));
 
                 // This is for wench movement forward and backward.
-                double winchHold = 0.08;
+                double winchHold = 0.00;
                 m_CoDriverController // This moves wench backwards
                                 .b()
                                 .onTrue(Commands.runOnce(() -> m_robotWench.setWenchSpeed(-0.1)))
@@ -129,7 +129,7 @@ public class RobotContainer {
 
                 m_CoDriverController // This moves wench forwards
                                 .x()
-                                .onTrue(Commands.runOnce(() -> m_robotWench.setWenchSpeed(1)))
+                                .onTrue(Commands.runOnce(() -> m_robotWench.setWenchSpeed(0.1)))
                                 .onFalse(Commands.runOnce(() -> m_robotWench.setWenchSpeed(winchHold)));
                 // m_driverController // This moves wench backwards
                 // .b()
@@ -149,22 +149,22 @@ public class RobotContainer {
                                 // TODO: determine what reset function to call
                                 .onTrue(Commands.runOnce(() -> m_robotClaw.zeroSensors()));
 
-                // Moving claw to pre-set positions
-                m_driverController
-                                .y() // button Y is yellow, like cones
-                                .onTrue(Commands.runOnce(() -> m_robotClaw.goToConePosition()));
-                m_driverController
-                                .x() // button X is blue/purple, like cubes
-                                .onTrue(Commands.runOnce(() -> m_robotClaw.goToCubePosition()));
-                m_driverController
-                                .a() // button A is green for open
-                                .onTrue(Commands.runOnce(() -> m_robotClaw.goToMaxOpenPosition()));
+                // // Moving claw to pre-set positions
+                // m_driverController
+                // .y() // button Y is yellow, like cones
+                // .onTrue(Commands.runOnce(() -> m_robotClaw.goToConePosition()));
+                // m_driverController
+                // .x() // button X is blue/purple, like cubes
+                // .onTrue(Commands.runOnce(() -> m_robotClaw.goToCubePosition()));
+                // m_driverController
+                // .a() // button A is green for open
+                // .onTrue(Commands.runOnce(() -> m_robotClaw.goToMaxOpenPosition()));
                 m_driverController
                                 .start()
                                 .onTrue(Commands.runOnce(() -> m_robotCamera.nextCameraSelection()));
 
                 // // This is for claw movement to manually open.
-                double manualClawSpeed = 0.5;
+                double manualClawSpeed = 0.4;
                 m_driverController
                                 .povLeft()
                                 .onTrue(Commands.runOnce(
