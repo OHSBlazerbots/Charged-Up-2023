@@ -14,8 +14,10 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IOConstants;
 import frc.robot.commands.DriveStraightAutoCommand;
 import frc.robot.commands.DriveStraightAndBalanceAutoCommand;
+import frc.robot.commands.DriveStraightAndIntake;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.UpperWenchSubsystem;
 import frc.robot.subsystems.WenchSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.commands.MoveElevatorCommand;
@@ -26,6 +28,7 @@ public class RobotContainer {
         // The robot's subsystems
         private final DriveSubsystem m_robotDrive = new DriveSubsystem();
         private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
+        private final UpperWenchSubsystem m_upperWench = new UpperWenchSubsystem();
         private final WenchSubsystem m_robotWench = new WenchSubsystem();
         private final ClawSubsystem m_robotClaw = new ClawSubsystem();
         private final CameraSubsystem m_robotCamera = new CameraSubsystem();
@@ -33,6 +36,8 @@ public class RobotContainer {
                         AutoConstants.kShortDriveTimeSeconds);
         private final Command m_SimpleLongAuto = new DriveStraightAutoCommand(m_robotDrive,
                         AutoConstants.kLongDriveTimeSeconds);
+        private final Command m_DriveStraightAndIntake = new DriveStraightAndIntake(m_robotDrive,
+                        m_robotClaw, 1);
         private final Command m_ComplexAuto = new DriveStraightAndBalanceAutoCommand(m_robotDrive);
         private final Command m_NothingAuto = null;
         private final Command m_DriveStraightFullSpeedAutoCommand = new DriveStraightFullSpeedAutoCommand(m_robotDrive);
@@ -63,6 +68,7 @@ public class RobotContainer {
                 m_chooser.addOption("Nothing Auto", m_NothingAuto);
                 m_chooser.addOption("Drive straight Long Auto(7 seconds)", m_SimpleLongAuto);
                 m_chooser.addOption("Drive straight Short Auto(2.5 Seconds)", m_SimpleShortAuto);
+                m_chooser.addOption("Shoot cube auto for 1 second", m_DriveStraightAndIntake);
                 m_chooser.addOption("Drive straight full speed", m_DriveStraightFullSpeedAutoCommand);
                 // Put the chooser on the dashboard
                 SmartDashboard.putData(m_chooser);
@@ -169,6 +175,17 @@ public class RobotContainer {
                                 .onTrue(Commands.runOnce(
                                                 () -> m_robotClaw.setClawSpeed(-manualClawSpeed)))
                                 .onFalse(Commands.runOnce(() -> m_robotClaw.setClawSpeed(0)));
+
+                m_CoDriverController
+                                .povLeft()
+                                .onTrue(Commands.runOnce(
+                                                () -> m_upperWench.setUpperWenchSpeed(0.1)))
+                                .onFalse(Commands.runOnce(() -> m_upperWench.setUpperWenchSpeed(0)));
+                m_CoDriverController
+                                .povRight()
+                                .onTrue(Commands.runOnce(
+                                                () -> m_upperWench.setUpperWenchSpeed(-0.1)))
+                                .onFalse(Commands.runOnce(() -> m_upperWench.setUpperWenchSpeed(0)));
 
                 // // This is for claw movement to manually open.
                 // m_CoDriverController
