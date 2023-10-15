@@ -37,7 +37,7 @@ public class RobotContainer {
         private final Command m_SimpleLongAuto = new DriveStraightAutoCommand(m_robotDrive,
                         AutoConstants.kLongDriveTimeSeconds);
         private final Command m_DriveStraightAndIntake = new DriveStraightAndIntake(m_robotDrive,
-                        m_upperWench, 1);
+                        m_robotClaw, 1);
         private final Command m_ComplexAuto = new DriveStraightAndBalanceAutoCommand(m_robotDrive);
         private final Command m_NothingAuto = null;
         private final Command m_DriveStraightFullSpeedAutoCommand = new DriveStraightFullSpeedAutoCommand(m_robotDrive);
@@ -72,7 +72,6 @@ public class RobotContainer {
                 m_chooser.addOption("Drive straight full speed", m_DriveStraightFullSpeedAutoCommand);
                 // Put the chooser on the dashboard
                 SmartDashboard.putData(m_chooser);
-                
 
         }
 
