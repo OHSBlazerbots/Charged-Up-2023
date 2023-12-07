@@ -23,10 +23,13 @@ import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.commands.MoveElevatorCommand;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.commands.DriveStraightFullSpeedAutoCommand;
+import frc.robot.subsystems.SwerveSubsystem;
+
 
 public class RobotContainer {
         // The robot's subsystems
         private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+        private final SwerveSubsystem m_robotSwerve = new SwerveSubsystem();
         private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
         private final UpperWenchSubsystem m_upperWench = new UpperWenchSubsystem();
         private final WenchSubsystem m_robotWench = new WenchSubsystem();
